@@ -20,3 +20,5 @@ chown -R diradmin:diradmin ${PLUGINPATH}/user
 
 chmod 644 ${PLUGINPATH}/plugin.conf
 chown diradmin:diradmin ${PLUGINPATH}/plugin.conf
+
+exit 0;
