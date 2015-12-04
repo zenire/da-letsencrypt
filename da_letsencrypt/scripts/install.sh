@@ -21,6 +21,9 @@ chown -R diradmin:diradmin ${PLUGINPATH}/user
 chmod -R 755 ${PLUGINPATH}/hooks
 chown -R diradmin:diradmin ${PLUGINPATH}/hooks
 
+chmod -R 755 ${PLUGINPATH}/actions
+chown -R diradmin:diradmin ${PLUGINPATH}/actions
+
 chmod 644 ${PLUGINPATH}/plugin.conf
 chown diradmin:diradmin ${PLUGINPATH}/plugin.conf
 
