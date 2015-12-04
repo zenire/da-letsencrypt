@@ -18,6 +18,9 @@ chown -R diradmin:diradmin ${PLUGINPATH}/reseller
 chmod -R 755 ${PLUGINPATH}/user
 chown -R diradmin:diradmin ${PLUGINPATH}/user
 
+chmod -R 755 ${PLUGINPATH}/hooks
+chown -R diradmin:diradmin ${PLUGINPATH}/hooks
+
 chmod 644 ${PLUGINPATH}/plugin.conf
 chown diradmin:diradmin ${PLUGINPATH}/plugin.conf
 
