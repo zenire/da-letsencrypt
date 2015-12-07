@@ -1,0 +1,9 @@
+#!/usr/local/bin/php
+<?php
+require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+
+// logic
+
+$path = 'index.html?domain=' . $domain;
+
+require_once dirname(dirname(__DIR__)) . '/includes/headers_location.php';

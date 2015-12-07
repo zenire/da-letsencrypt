@@ -2,13 +2,10 @@
 #
 #Created by Peter Bin
 
-#Clone Let's Encrypt Git and install Let's Encrypt
-git clone https://github.com/letsencrypt/letsencrypt ~/letsencrypt
-~/letsencrypt/letsencrypt-auto
-
 #Plugin
 PLUGINPATH=/usr/local/directadmin/plugins/da_letsencrypt
 cd ${PLUGINPATH}
+
 chmod -R 755 ${PLUGINPATH}/admin
 chown -R diradmin:diradmin ${PLUGINPATH}/admin
 
@@ -21,8 +18,8 @@ chown -R diradmin:diradmin ${PLUGINPATH}/user
 chmod -R 755 ${PLUGINPATH}/hooks
 chown -R diradmin:diradmin ${PLUGINPATH}/hooks
 
-chmod -R 755 ${PLUGINPATH}/actions
-chown -R diradmin:diradmin ${PLUGINPATH}/actions
+chmod -R 755 ${PLUGINPATH}/logs
+chown -R diradmin:diradmin ${PLUGINPATH}/logs
 
 chmod 644 ${PLUGINPATH}/plugin.conf
 chown diradmin:diradmin ${PLUGINPATH}/plugin.conf

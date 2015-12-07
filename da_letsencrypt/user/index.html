@@ -1,17 +1,30 @@
 #!/usr/local/bin/php
+<?php require_once dirname(__DIR__) . '/includes/bootstrap.php'; ?>
 
-<? parse_str(getenv('QUERY_STRING')); ?>
-<table class=list cellspacing=1 cellpadding=3>
-<tr><td class=listtitle colspan=2>Request a SSL certificate</td></tr>
-<form action='/CMD_PLUGINS/da_letsencrypt/actions/request.php' method=POST>
-<input type=hidden name=domain value="<?=$domain;?>">
-<tr><td class=list>Domain</td><td class=list><?=$domain;?></td></tr>
-<tr><td class=list>Your E-mail address</td><td class=list><input type=text name='email' value='http://'> (eg: me@domain.com)</td></tr>
-<tr><td class=listtitle align=right colspan=2><input type=submit></td></tr>
-</form>
+<table class="list" cellspacing="1" cellpadding="3">
+    <tr>
+        <td class=listtitle colspan=2>Request a SSL certificate</td>
+    </tr>
+
+    <form action="/CMD_PLUGINS/da_letsencrypt/actions/request.raw" method="POST">
+        <input type="hidden" name="domain" value="<?= $domain; ?>"/>
+
+        <tr>
+            <td class="list">Domain</td>
+            <td class=list><?= $domain; ?></td>
+        </tr>
+        <tr>
+            <td class="list">E-mail Address</td>
+            <td class=list>
+                <input type="text" name="email" value="" /> (e.g. example@domain.com)
+            </td>
+        </tr>
+        <tr>
+            <td class="listtitle" align="right" colspan="2">
+                <input type="submit">
+            </td>
+        </tr>
+    </form>
 </table>
-
-
-
 
 
