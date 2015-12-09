@@ -47,8 +47,12 @@ if (!file_exists($publicKeyPath) || !file_exists($privateKeyPath)) {
 
     $acme = new AcmeService(new AcmeClient('https://acme-staging.api.letsencrypt.org/directory', $keyPair), $keyPair);
 
-    // Register, because we've just created a key pair.
-    $acme->register($email);
+    try {
+        // Register, because we've just created a key pair.
+        $acme->register($email);
+    } catch(\Exception $e) {
+        $log->error($e->getMessage());
+    }
 
     $log->info('Created a new pair of RSA keys for you and registrered them at Let\'s Encrypt.');
 } else {
@@ -69,7 +73,11 @@ if (!file_exists($publicKeyPath) || !file_exists($privateKeyPath)) {
  */
 $log->setErrorShort('Error while completing domain challenges');
 
-$response = $acme->requestChallenges($domain);
+try {
+    $response = $acme->requestChallenges($domain);
+} catch(\Exception $e) {
+    $log->error($e->getMessage());
+}
 
 $goodChallenges = [];
 foreach ($response[1]->challenges as $i => $challenge) {
@@ -91,7 +99,11 @@ if (empty($goodChallenges)) {
 $challenge = $response[1]->challenges[reset($goodChallenges)];
 $token = $challenge->token;
 
-$payload = $acme->generateHttp01Payload($token);
+try {
+    $payload = $acme->generateHttp01Payload($token);
+} catch(\Exception $e) {
+    $log->error($e->getMessage());
+}
 
 $challengePath = $domainPath . DIRECTORY_SEPARATOR . 'public_html' . DIRECTORY_SEPARATOR . '.well-known';
 
@@ -107,10 +119,14 @@ if (!file_exists($challengePath)) {
 
 file_put_contents($challengePath . DIRECTORY_SEPARATOR . $token, $payload);
 
-$acme->selfVerify($domain, $token, $payload);
+try {
+    $acme->selfVerify($domain, $token, $payload);
 
-$acme->answerChallenge($challenge->uri, $payload);
-$acme->pollForChallenge($response[0]);
+    $acme->answerChallenge($challenge->uri, $payload);
+    $acme->pollForChallenge($response[0]);
+} catch(\Exception $e) {
+    $log->error($e->getMessage());
+}
 
 $log->info('Successfully completed challenge for ' . $domain . '.');
 
@@ -124,10 +140,14 @@ $public = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'public.
 
 $domainKeys = new KeyPair($private, $public);
 
-$location = $acme->requestCertificate($domainKeys, [$domain]);
-$certificates = $acme->pollForCertificate($location);
+try {
+    $location = $acme->requestCertificate($domainKeys, [$domain]);
+    $certificates = $acme->pollForCertificate($location);
 
-$certificate = $domainKeys->getPrivate() . "\n" . array_shift($certificates);
+    $certificate = $domainKeys->getPrivate() . "\n" . array_shift($certificates);
+} catch(\Exception $e) {
+    $log->error($e->getMessage());
+}
 
 $log->info('Successfully received certificate from Let\'s Encrypt.');
 
@@ -149,6 +169,10 @@ $sock->query('/CMD_API_SSL', [
 ]);
 $result = $sock->fetch_parsed_body();
 
+if ($result['error'] != 0) {
+    $log->error('Error while executing API request: ' . $result['details']);
+}
+
 $sock = new HTTPSocket();
 $sock->connect('127.0.0.1', 2222);
 $sock->set_login('admin','');
@@ -162,6 +186,10 @@ $sock->query('/CMD_API_SSL', [
     'submit' => 'Save'
 ]);
 $result = $sock->fetch_parsed_body();
+
+if ($result['error'] != 0) {
+    $log->error('Error while executing API request: ' . $result['details']);
+}
 
 $log->info('Successfully saved new certificate and CA certificates in DirectAdmin.');
 
