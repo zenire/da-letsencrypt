@@ -20,8 +20,11 @@
             </td>
         </tr>
         <tr>
-            <td class="listtitle" align="right" colspan="2">
-                <input type="submit">
+            <td class="listtitle" align="right" colspan="6">
+                <input type="checkbox" name="accept_tos" onclick="document.getElementsByClassName('submit_accept_tos')[0].disabled = !this.checked;">
+                I accept the <a href="https://letsencrypt.org/repository/" target="_blank">Terms of Service</a> of Let's Encrypt.
+
+                <input type="submit" class="submit_accept_tos" disabled="disabled">
             </td>
         </tr>
     </form>

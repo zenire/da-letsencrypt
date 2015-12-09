@@ -1,5 +1,6 @@
 {
   "require": {
-    "phpseclib/phpseclib": "^2.0"
-  }
+    "wouter0100/acme": "dev-master"
+  },
+  "minimum-stability": "dev"
 }

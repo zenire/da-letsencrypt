@@ -1,7 +1,126 @@
 #!/usr/local/bin/php
 <?php
-require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+namespace DirectAdmin\LetsEncrypt\Users\Actions;
 
+use Crypt_RSA;
+use Kelunik\Acme\AcmeClient;
+use Kelunik\Acme\AcmeService;
+use Kelunik\Acme\KeyPair;
+
+// Variables from POST/GET //
+/* @var String $domain */
+/* @var String $email */
+// End variables from POST/GET //
+
+/* @var String $accountPath */
+/* @var String $accountSettingsPath */
+/* @var String $domainPath */
+/* @var String $domainSettingsPath */
+require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+var_dump('start');
+
+/**
+ * Private/public certificates
+ */
+$publicKeyPath = $accountSettingsPath . DIRECTORY_SEPARATOR . 'public.key';
+$privateKeyPath = $accountSettingsPath . DIRECTORY_SEPARATOR . 'private.key';
+
+if (!file_exists($publicKeyPath) || !file_exists($privateKeyPath)) {
+    $rsa = new Crypt_RSA();
+
+    $keys = $rsa->createKey(4096);
+
+    if ($keys['partialkey'] === false) {
+        $keyPair = new KeyPair($keys['privatekey'], $keys['publickey']);
+
+        file_put_contents($publicKeyPath, $keyPair->getPublic());
+        file_put_contents($privateKeyPath, $keyPair->getPrivate());
+    } else {
+        echo 'CPU was to slow, we\'ve not yet coded this part.';
+        exit(501);
+    }
+
+    $acme = new AcmeService(new AcmeClient('https://acme-staging.api.letsencrypt.org/directory', $keyPair), $keyPair);
+
+    // Register, because we've just created a key pair.
+    $acme->register($email);
+} else {
+    $publicKey = file_get_contents($publicKeyPath);
+    $privateKey = file_get_contents($privateKeyPath);
+
+    $keyPair = new KeyPair($privateKey, $publicKey);
+
+    $acme = new AcmeService(new AcmeClient('https://acme-staging.api.letsencrypt.org/directory', $keyPair), $keyPair);
+}
+
+/**
+ * Request and complete challenges for domain
+ */
+$response = $acme->requestChallenges($domain);
+
+$goodChallenges = [];
+foreach ($response[1]->challenges as $i => $challenge) {
+    if ($challenge->type === "http-01") {
+        $goodChallenges[] = $i;
+    }
+}
+
+foreach ($goodChallenges as $i => $challenge) {
+    if (!in_array([$challenge], $response[1]->combinations)) {
+        unset($goodChallenges[$i]);
+    }
+}
+
+if (empty($goodChallenges)) {
+    echo 'We didn\'t receive any challenge we can solve.';
+    exit(501);
+}
+
+$challenge = $response[1]->challenges[reset($goodChallenges)];
+$token = $challenge->token;
+
+$payload = $acme->generateHttp01Payload($token);
+
+$challengePath = $domainPath . DIRECTORY_SEPARATOR . 'public_html' . DIRECTORY_SEPARATOR . '.well-known';
+
+if (!file_exists($challengePath)) {
+    mkdir($challengePath);
+}
+
+$challengePath .= DIRECTORY_SEPARATOR . 'acme-challenge';
+
+if (!file_exists($challengePath)) {
+    mkdir($challengePath);
+}
+
+file_put_contents($challengePath . DIRECTORY_SEPARATOR . $token, $payload);
+
+$acme->selfVerify($domain, $token, $payload);
+var_dump('Successfully self-verified challenge.');
+
+$acme->answerChallenge($challenge->uri, $payload);
+var_dump('Answered challenge... waiting');
+
+$acme->pollForChallenge($response[0]);
+var_dump('Challenge successful. ' . $domain . ' is now authorized.');
+
+/**
+ * Request certificate
+ */
+$private = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'private.txt');
+$public = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'public.txt');
+
+$domainKeys = new KeyPair($private, $public);
+var_dump($domainKeys);
+
+$location = $acme->requestCertificate($domainKeys, [$domain]);
+var_dump($location);
+
+$certificates = $acme->pollForCertificate($location);
+var_dump($certificates);
+
+var_dump('end');
+exit();
 // logic
 
 $path = 'index.html?domain=' . $domain;
