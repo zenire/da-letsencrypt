@@ -1,8 +1,13 @@
 #!/bin/sh
 #
-#Created by Peter Bin
+# Created by Peter Bin
 
-#Plugin
+# Install dependencies using Composer
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/tmp
+/tmp/composer.phar install
+rm -f /tmp/composer.phar
+
+# Plugin
 PLUGINPATH=/usr/local/directadmin/plugins/da_letsencrypt
 cd ${PLUGINPATH}
 
@@ -15,10 +20,7 @@ chown -R diradmin:diradmin ${PLUGINPATH}/reseller
 chmod -R 755 ${PLUGINPATH}/user
 chown -R diradmin:diradmin ${PLUGINPATH}/user
 
-chmod -R 755 ${PLUGINPATH}/hooks
-chown -R diradmin:diradmin ${PLUGINPATH}/hooks
-
-chmod -R 755 ${PLUGINPATH}/logs
+chmod -R 777 ${PLUGINPATH}/logs
 chown -R diradmin:diradmin ${PLUGINPATH}/logs
 
 chmod 644 ${PLUGINPATH}/plugin.conf
