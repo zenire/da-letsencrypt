@@ -3,9 +3,14 @@
 # Created by Peter Bin
 
 # Install dependencies using Composer
+workingDirectory=$(pwd)
+cd $PLUGINPATH
+
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/tmp
 /tmp/composer.phar install
 rm -f /tmp/composer.phar
+
+cd $workingDirectory
 
 # Plugin
 PLUGINPATH=/usr/local/directadmin/plugins/da_letsencrypt
