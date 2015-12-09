@@ -30,4 +30,6 @@ chown -R diradmin:diradmin ${PLUGINPATH}/logs
 chmod 644 ${PLUGINPATH}/plugin.conf
 chown diradmin:diradmin ${PLUGINPATH}/plugin.conf
 
+echo "Successfully installed Let's Encrypt plugin for DirectAdmin.";
+
 exit 0;
