@@ -21,7 +21,7 @@ use Kelunik\Acme\KeyPair;
 require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
 
 $log = new Logger();
-$log->short('Successfully applied SSL certificate');
+$log->short('Successfully applied SSL certificate for '.$domain);
 
 /**
  * Private/public certificates
