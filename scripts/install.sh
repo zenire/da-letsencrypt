@@ -2,20 +2,15 @@
 #
 # Created by Peter Bin
 
-# Install dependencies using Composer
-workingDirectory=$(pwd)
-cd $PLUGINPATH
+PLUGINPATH=/usr/local/directadmin/plugins/da_letsencrypt
+cd ${PLUGINPATH}
 
+# Install dependencies using Composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/tmp
 /tmp/composer.phar install
 rm -f /tmp/composer.phar
 
-cd $workingDirectory
-
 # Plugin
-PLUGINPATH=/usr/local/directadmin/plugins/da_letsencrypt
-cd ${PLUGINPATH}
-
 chmod -R 755 ${PLUGINPATH}/admin
 chown -R diradmin:diradmin ${PLUGINPATH}/admin
 
