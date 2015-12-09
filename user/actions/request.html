@@ -135,10 +135,15 @@ $log->info('Successfully completed challenge for ' . $domain . '.');
  */
 $log->setErrorShort('Error while requesting SSL certificates');
 
-$private = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'private.txt');
-$public = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'public.txt');
+$rsa = new Crypt_RSA();
 
-$domainKeys = new KeyPair($private, $public);
+$keys = $rsa->createKey(4096);
+
+if ($keys['partialkey'] === false) {
+    $domainKeys = new KeyPair($keys['privatekey'], $keys['publickey']);
+} else {
+    $log->error('CPU was to slow, we\'ve not yet coded this part.');
+}
 
 try {
     $location = $acme->requestCertificate($domainKeys, [$domain]);
