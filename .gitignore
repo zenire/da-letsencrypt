@@ -2,4 +2,4 @@
 *.iml
 out
 gen
-/da_letsencrypt/vendor/*
+vendor
