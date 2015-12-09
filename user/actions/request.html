@@ -3,7 +3,8 @@
 namespace DirectAdmin\LetsEncrypt\Users\Actions;
 
 use Crypt_RSA;
-use HTTPSocket;
+use DirectAdmin\LetsEncrypt\Lib\HTTPSocket;
+use DirectAdmin\LetsEncrypt\Lib\Logger;
 use Kelunik\Acme\AcmeClient;
 use Kelunik\Acme\AcmeService;
 use Kelunik\Acme\KeyPair;
@@ -18,7 +19,9 @@ use Kelunik\Acme\KeyPair;
 /* @var String $domainPath */
 /* @var String $domainSettingsPath */
 require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
-var_dump('start');
+
+$log = new Logger();
+$log->short('Successfully applied SSL certificate');
 
 /**
  * Private/public certificates
@@ -27,6 +30,8 @@ $publicKeyPath = $accountSettingsPath . DIRECTORY_SEPARATOR . 'public.key';
 $privateKeyPath = $accountSettingsPath . DIRECTORY_SEPARATOR . 'private.key';
 
 if (!file_exists($publicKeyPath) || !file_exists($privateKeyPath)) {
+    $log->setErrorShort('Error while creating account keys');
+
     $rsa = new Crypt_RSA();
 
     $keys = $rsa->createKey(4096);
@@ -37,26 +42,33 @@ if (!file_exists($publicKeyPath) || !file_exists($privateKeyPath)) {
         file_put_contents($publicKeyPath, $keyPair->getPublic());
         file_put_contents($privateKeyPath, $keyPair->getPrivate());
     } else {
-        echo 'CPU was to slow, we\'ve not yet coded this part.';
-        exit(501);
+        $log->error('CPU was to slow, we\'ve not yet coded this part.');
     }
 
     $acme = new AcmeService(new AcmeClient('https://acme-staging.api.letsencrypt.org/directory', $keyPair), $keyPair);
 
     // Register, because we've just created a key pair.
     $acme->register($email);
+
+    $log->info('Created a new pair of RSA keys for you and registrered them at Let\'s Encrypt.');
 } else {
+    $log->setErrorShort('Error while receiving account keys');
+
     $publicKey = file_get_contents($publicKeyPath);
     $privateKey = file_get_contents($privateKeyPath);
 
     $keyPair = new KeyPair($privateKey, $publicKey);
 
     $acme = new AcmeService(new AcmeClient('https://acme-staging.api.letsencrypt.org/directory', $keyPair), $keyPair);
+
+    $log->info('Reused the pair of existing RSA keys.');
 }
 
 /**
  * Request and complete challenges for domain
  */
+$log->setErrorShort('Error while completing domain challenges');
+
 $response = $acme->requestChallenges($domain);
 
 $goodChallenges = [];
@@ -73,8 +85,7 @@ foreach ($goodChallenges as $i => $challenge) {
 }
 
 if (empty($goodChallenges)) {
-    echo 'We didn\'t receive any challenge we can solve.';
-    exit(501);
+    $log->error('We didn\'t receive any challenge we can solve.');
 }
 
 $challenge = $response[1]->challenges[reset($goodChallenges)];
@@ -101,9 +112,13 @@ $acme->selfVerify($domain, $token, $payload);
 $acme->answerChallenge($challenge->uri, $payload);
 $acme->pollForChallenge($response[0]);
 
+$log->info('Successfully completed challenge for ' . $domain . '.');
+
 /**
  * Request certificate
  */
+$log->setErrorShort('Error while requesting SSL certificates');
+
 $private = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'private.txt');
 $public = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'public.txt');
 
@@ -111,9 +126,15 @@ $domainKeys = new KeyPair($private, $public);
 
 $location = $acme->requestCertificate($domainKeys, [$domain]);
 $certificates = $acme->pollForCertificate($location);
-var_dump($certificates);
 
 $certificate = $domainKeys->getPrivate() . "\n" . array_shift($certificates);
+
+$log->info('Successfully received certificate from Let\'s Encrypt.');
+
+/**
+ * Save certificate in DirectAdmin
+ */
+$log->setErrorShort('Error while saving SSL certificates to DirectAdmin');
 
 $sock = new HTTPSocket();
 $sock->connect('127.0.0.1', 2222);
@@ -127,7 +148,6 @@ $sock->query('/CMD_API_SSL', [
     'submit' => 'Save'
 ]);
 $result = $sock->fetch_parsed_body();
-echo nl2br(print_r($result, true));
 
 $sock = new HTTPSocket();
 $sock->connect('127.0.0.1', 2222);
@@ -142,12 +162,7 @@ $sock->query('/CMD_API_SSL', [
     'submit' => 'Save'
 ]);
 $result = $sock->fetch_parsed_body();
-echo nl2br(print_r($result, true));
 
-var_dump('end');
-exit();
-// logic
+$log->info('Successfully saved new certificate and CA certificates in DirectAdmin.');
 
-$path = 'index.html?domain=' . $domain;
-
-require_once dirname(dirname(__DIR__)) . '/includes/headers_location.php';
+$log->output();
