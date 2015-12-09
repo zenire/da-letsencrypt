@@ -3,6 +3,7 @@
 namespace DirectAdmin\LetsEncrypt\Users\Actions;
 
 use Crypt_RSA;
+use HTTPSocket;
 use Kelunik\Acme\AcmeClient;
 use Kelunik\Acme\AcmeService;
 use Kelunik\Acme\KeyPair;
@@ -96,13 +97,9 @@ if (!file_exists($challengePath)) {
 file_put_contents($challengePath . DIRECTORY_SEPARATOR . $token, $payload);
 
 $acme->selfVerify($domain, $token, $payload);
-var_dump('Successfully self-verified challenge.');
 
 $acme->answerChallenge($challenge->uri, $payload);
-var_dump('Answered challenge... waiting');
-
 $acme->pollForChallenge($response[0]);
-var_dump('Challenge successful. ' . $domain . ' is now authorized.');
 
 /**
  * Request certificate
@@ -111,13 +108,41 @@ $private = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'privat
 $public = file_get_contents($domainSettingsPath . DIRECTORY_SEPARATOR . 'public.txt');
 
 $domainKeys = new KeyPair($private, $public);
-var_dump($domainKeys);
 
 $location = $acme->requestCertificate($domainKeys, [$domain]);
-var_dump($location);
-
 $certificates = $acme->pollForCertificate($location);
 var_dump($certificates);
+
+$certificate = $domainKeys->getPrivate() . "\n" . array_shift($certificates);
+
+$sock = new HTTPSocket();
+$sock->connect('127.0.0.1', 2222);
+$sock->set_login('admin','');
+$sock->set_method('POST');
+$sock->query('/CMD_API_SSL', [
+    'domain' => $domain,
+    'action' => 'save',
+    'type' => 'paste',
+    'certificate' => $certificate,
+    'submit' => 'Save'
+]);
+$result = $sock->fetch_parsed_body();
+echo nl2br(print_r($result, true));
+
+$sock = new HTTPSocket();
+$sock->connect('127.0.0.1', 2222);
+$sock->set_login('admin','');
+$sock->set_method('POST');
+$sock->query('/CMD_API_SSL', [
+    'domain' => $domain,
+    'action' => 'save',
+    'type' => 'cacert',
+    'active' => 'yes',
+    'cacert' => implode("\n", $certificates),
+    'submit' => 'Save'
+]);
+$result = $sock->fetch_parsed_body();
+echo nl2br(print_r($result, true));
 
 var_dump('end');
 exit();

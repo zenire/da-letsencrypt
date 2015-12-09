@@ -1,8 +1,8 @@
 <?php
 
-//foreach (glob(__DIR__ . '/lib/*') as $file) {
-//    require_once $file;
-//}
+foreach (glob(__DIR__ . '/lib/*') as $file) {
+    require_once $file;
+}
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
