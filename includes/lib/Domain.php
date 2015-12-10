@@ -3,9 +3,12 @@
 namespace DirectAdmin\LetsEncrypt\Lib;
 
 use Crypt_RSA;
+use DirectAdmin\LetsEncrypt\Lib\Utility\StorageTrait;
 use Kelunik\Acme\KeyPair;
 
 class Domain {
+
+    use StorageTrait;
 
     private $domain;
 
