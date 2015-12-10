@@ -1,8 +1,16 @@
 <?php
 
-foreach (glob(__DIR__ . '/lib/*') as $file) {
-    require_once $file;
+function loadLibrary($dir) {
+    foreach (glob($dir) as $file) {
+        if (is_dir($file)) {
+            loadLibrary($file . '/*');
+        } else {
+            require_once $file;
+        }
+    }
 }
+
+loadLibrary(__DIR__ . '/lib/*');
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -18,11 +26,3 @@ if (!file_exists($accountSettingsPath)) {
     mkdir($accountSettingsPath);
 }
 
-if (isset($domain)) {
-    $domainPath = $_SERVER['HOME']  . DIRECTORY_SEPARATOR . 'domains' . DIRECTORY_SEPARATOR . $domain;
-    $domainSettingsPath = $domainPath . DIRECTORY_SEPARATOR . '.letsencrypt';
-
-    if (!file_exists($domainSettingsPath)) {
-        mkdir($domainSettingsPath);
-    }
-}
