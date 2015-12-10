@@ -3,6 +3,7 @@
 namespace DirectAdmin\LetsEncrypt\Lib;
 
 use Crypt_RSA;
+use DirectAdmin\LetsEncrypt\Lib\Utility\ConfigurableTrait;
 use DirectAdmin\LetsEncrypt\Lib\Utility\StorageTrait;
 use Kelunik\Acme\AcmeClient;
 use Kelunik\Acme\AcmeService;
@@ -16,6 +17,7 @@ use Kelunik\Acme\KeyPair;
 class Account {
 
     use StorageTrait;
+    use ConfigurableTrait;
 
     private $username;
     private $email;
