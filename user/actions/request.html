@@ -7,12 +7,6 @@ use DirectAdmin\LetsEncrypt\Lib\Challenges;
 use DirectAdmin\LetsEncrypt\Lib\Domain;
 use DirectAdmin\LetsEncrypt\Lib\Logger;
 
-// Variables from POST/GET //
-/* @var String $domain */
-/* @var String $email */
-/* @var String $accept_tos */
-// End variables from POST/GET //
-
 /* @var String $accountPath */
 /* @var String $accountSettingsPath */
 /* @var String $domainPath */
@@ -20,27 +14,28 @@ use DirectAdmin\LetsEncrypt\Lib\Logger;
 require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
 
 $log = new Logger();
-$log->short('Successfully applied SSL certificate for '.$domain);
+$log->short('Successfully applied SSL certificate for ' . $_POST['domain']);
 
 /**
  * Check if TOS is accepted and e-mail is defined
  */
-if ($accept_tos !== 'on') {
+if ($_POST['accept_tos'] !== 'on') {
     $log->error('You didn\'t accept the Terms of Service.');
 }
 
-if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $log->error('The provided e-mailadres is invalid.');
 }
 
 /**
  * Load account and domain
  */
-try {
-    $account = new Account($_SERVER['USERNAME'], $email, 'https://acme-staging.api.letsencrypt.org/directory');
 
-    /** @var Domain $domain */
-    $domain = new Domain($domain, $account);
+/** @var Domain $domain */
+try {
+    $account = new Account($_SERVER['USERNAME'], $_POST['email'], 'https://acme-staging.api.letsencrypt.org/directory');
+
+    $domain = new Domain($_POST['domain'], $account);
 } catch (\Exception $e) {
     $log->error($e->getMessage());
 }
