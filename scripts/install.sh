@@ -6,10 +6,12 @@ PLUGINPATH=/usr/local/directadmin/plugins/da-letsencrypt
 cd ${PLUGINPATH}
 
 # Install dependencies using Composer
-curl -sS https://getcomposer.org/installer >> /tmp/composer_installer
-php /tmp/composer_installer --quiet --install-dir=/tmp
-/tmp/composer.phar install -q
-rm -f /tmp/composer.phar /tmp/installer
+if [ ! -d ${PLUGINPATH}/vendor ]; then
+    curl -sS https://getcomposer.org/installer -o /tmp/composer_installer
+    php /tmp/composer_installer --quiet --install-dir=/tmp
+    /tmp/composer.phar install -o --prefer-dist -q
+    rm -f /tmp/composer_installer /tmp/composer.phar /tmp/installer
+fi
 
 # Plugin
 chmod -R 755 ${PLUGINPATH}/admin
