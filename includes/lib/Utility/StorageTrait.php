@@ -20,7 +20,7 @@ trait StorageTrait {
     public function writeToStorage($fileName, $content) {
         $path = $this->getStoragePath();
 
-        if (!$this->existsInStorage($path)) {
+        if (!file_exists($path)) {
             mkdir($path);
         }
 

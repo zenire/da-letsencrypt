@@ -76,6 +76,9 @@ $log->setErrorShort('Error while saving SSL certificates to DirectAdmin');
 
 try {
     $domain->applyCertificates();
+
+    $domain->config('status', 'active');
+    $domain->config('expire', date('Y-m-d', strtotime('+60 days')));
 } catch(\Exception $e) {
     $log->error($e->getMessage());
 }

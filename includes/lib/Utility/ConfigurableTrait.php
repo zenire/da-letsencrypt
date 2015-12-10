@@ -23,7 +23,7 @@ trait ConfigurableTrait {
      * @return string|null
      */
     public function config($key = null, $value = null) {
-        if ($this->initializedConfig) {
+        if (!$this->initializedConfig) {
             $this->initializeConfig();
         }
 
@@ -34,6 +34,17 @@ trait ConfigurableTrait {
 
             $this->saveConfig();
         }
+    }
+
+    /**
+     * Delete a key from the configuration and save it
+     *
+     * @param $key
+     */
+    public function deleteConfigKey($key) {
+        unset($this->config[$key]);
+
+        $this->saveConfig();
     }
 
     /**

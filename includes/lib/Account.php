@@ -16,7 +16,6 @@ use Kelunik\Acme\KeyPair;
  */
 class Account {
 
-    use StorageTrait;
     use ConfigurableTrait;
 
     private $username;

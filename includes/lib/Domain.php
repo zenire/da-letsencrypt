@@ -14,7 +14,6 @@ use Kelunik\Acme\KeyPair;
  */
 class Domain {
 
-    use StorageTrait;
     use ConfigurableTrait;
 
     private $domain;
