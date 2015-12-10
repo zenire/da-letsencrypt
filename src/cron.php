@@ -51,11 +51,9 @@ rrmdir($extract . DIRECTORY_SEPARATOR . 'da-letsencrypt-1.0');
 /**
  * Run composer
  */
-if (!file_exists('/tmp/composer/vendor/autoload.php')) {
-    $composerPhar = new Phar('composer.phar');
+$composerPhar = new Phar('/tmp/composer.phar');
 
-    $composerPhar->extractTo('/tmp/composer');
-}
+$composerPhar->extractTo('/tmp/composer');
 
 require_once '/tmp/composer/vendor/autoload.php';
 
@@ -92,5 +90,6 @@ rename($extract . '.tar.gz', __DIR__ . DIRECTORY_SEPARATOR . 'download.tar.gz');
  * Clean up /tmp directory
  */
 rrmdir($extract);
+rrmdir('/tmp/composer');
 unlink($archive);
 unlink($extract . '.tar'); //why is this one created?
