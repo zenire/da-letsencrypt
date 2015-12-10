@@ -2,6 +2,11 @@
 
 namespace DirectAdmin\LetsEncrypt\Lib\Challenges;
 
+/**
+ * Class Http01Challenge
+ *
+ * @package DirectAdmin\LetsEncrypt\Lib\Challenges
+ */
 class Http01Challenge extends BaseChallenge {
 
     /**

@@ -2,6 +2,11 @@
 
 namespace DirectAdmin\LetsEncrypt\Lib;
 
+/**
+ * Class Logger
+ *
+ * @package DirectAdmin\LetsEncrypt\Lib
+ */
 class Logger {
 
     private $lines = [];

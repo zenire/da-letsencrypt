@@ -6,6 +6,11 @@ use Crypt_RSA;
 use DirectAdmin\LetsEncrypt\Lib\Utility\StorageTrait;
 use Kelunik\Acme\KeyPair;
 
+/**
+ * Class Domain
+ *
+ * @package DirectAdmin\LetsEncrypt\Lib
+ */
 class Domain {
 
     use StorageTrait;

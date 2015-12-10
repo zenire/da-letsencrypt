@@ -4,6 +4,11 @@ namespace DirectAdmin\LetsEncrypt\Lib\Challenges;
 
 use DirectAdmin\LetsEncrypt\Lib\Domain;
 
+/**
+ * Class BaseChallenge
+ *
+ * @package DirectAdmin\LetsEncrypt\Lib\Challenges
+ */
 class BaseChallenge {
 
     protected $type;
