@@ -148,6 +148,15 @@ class Domain {
         return DIRECTORY_SEPARATOR . 'home' . DIRECTORY_SEPARATOR . $this->account->getUsername() . DIRECTORY_SEPARATOR . 'domains' . DIRECTORY_SEPARATOR . $this->domain;
     }
 
+    /**
+     * Get path to domain storage
+     *
+     * @return string
+     */
+    public function getStoragePath() {
+        return $this->getPath() . DIRECTORY_SEPARATOR . '.letsencrypt';
+    }
+
     function __debugInfo() {
         return [
             'account' => $this->account,

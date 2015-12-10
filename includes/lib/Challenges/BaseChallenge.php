@@ -3,7 +3,6 @@
 namespace DirectAdmin\LetsEncrypt\Lib\Challenges;
 
 use DirectAdmin\LetsEncrypt\Lib\Domain;
-use Kelunik\Acme\AcmeService;
 
 class BaseChallenge {
 

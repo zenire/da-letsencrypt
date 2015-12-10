@@ -41,14 +41,11 @@ class Account {
      * @return bool
      */
     public function loadKeys() {
-        $this->publicKeyPath = $this->getSettingsPath() . DIRECTORY_SEPARATOR . 'public.key';
-        $this->privateKeyPath = $this->getSettingsPath() . DIRECTORY_SEPARATOR . 'private.key';
-
-        if (!file_exists($this->publicKeyPath) || !file_exists($this->privateKeyPath)) {
+        if (!$this->existsInStorage('public.key') || !$this->existsInStorage('private.key')) {
             return false;
         } else {
-            $publicKey = file_get_contents($this->publicKeyPath);
-            $privateKey = file_get_contents($this->privateKeyPath);
+            $publicKey = $this->getFromStorage('public.key');
+            $privateKey = $this->getFromStorage('private.key');
 
             $this->keyPair = new KeyPair($privateKey, $publicKey);
 
@@ -72,8 +69,8 @@ class Account {
      *
      * @return string
      */
-    public function getSettingsPath() {
-        return DIRECTORY_SEPARATOR . 'home' . DIRECTORY_SEPARATOR . $this->username . DIRECTORY_SEPARATOR . '.letsencrypt';
+    public function getStoragePath() {
+        return  $this->getPath() . DIRECTORY_SEPARATOR . '.letsencrypt';
     }
 
     /**
@@ -90,8 +87,8 @@ class Account {
         if ($keys['partialkey'] === false) {
             $this->keyPair = new KeyPair($keys['privatekey'], $keys['publickey']);
 
-            file_put_contents($this->publicKeyPath, $this->keyPair->getPublic());
-            file_put_contents($this->privateKeyPath, $this->keyPair->getPrivate());
+            $this->writeToStorage('public.key', $this->keyPair->getPublic());
+            $this->writeToStorage('private.key', $this->keyPair->getPrivate());
         } else {
             throw new \Exception('CPU was to slow, we\'ve not yet coded this part.');
         }
@@ -108,6 +105,44 @@ class Account {
      */
     public function register() {
         $this->acme->register($this->email);
+    }
+
+    /**
+     * Write to the account storage, always overwrites files
+     *
+     * @param $fileName
+     * @param $content
+     */
+    public function writeToStorage($fileName, $content) {
+        $path = $this->getStoragePath();
+
+        if (!$this->existsInStorage($path)) {
+            mkdir($path);
+        }
+
+        file_put_contents($path . DIRECTORY_SEPARATOR . $fileName, $content);
+    }
+
+    /**
+     * Get from account storage
+     *
+     * @param $fileName
+     *
+     * @return string
+     */
+    public function getFromStorage($fileName) {
+        return file_get_contents($this->getStoragePath() . DIRECTORY_SEPARATOR . $fileName);
+    }
+
+    /**
+     * Check if a file or folder exists
+     *
+     * @param $fileName
+     *
+     * @return string
+     */
+    public function existsInStorage($fileName) {
+        return file_exists($this->getStoragePath() . DIRECTORY_SEPARATOR . $fileName);
     }
 
     /**

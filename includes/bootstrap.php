@@ -1,17 +1,5 @@
 <?php
 
-function loadLibrary($dir) {
-    foreach (glob($dir) as $file) {
-        if (is_dir($file)) {
-            loadLibrary($file . '/*');
-        } else {
-            require_once $file;
-        }
-    }
-}
-
-loadLibrary(__DIR__ . '/lib/*');
-
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 ini_set('log_errors', 1);

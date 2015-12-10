@@ -2,5 +2,10 @@
   "require": {
     "wouter0100/acme": "dev-master"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "DirectAdmin\\LetsEncrypt\\Lib\\": "includes/lib"
+    }
+  }
 }
