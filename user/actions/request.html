@@ -13,6 +13,7 @@ use Kelunik\Acme\KeyPair;
 // Variables from POST/GET //
 /* @var String $domain */
 /* @var String $email */
+/* @var String $accept_tos */
 // End variables from POST/GET //
 
 /* @var String $accountPath */
@@ -24,8 +25,20 @@ require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
 $log = new Logger();
 $log->short('Successfully applied SSL certificate for '.$domain);
 
+/**
+ * Check if TOS is accepted and e-mail is defined
+ */
+if ($accept_tos !== 'on') {
+    $log->error('You didn\'t accept the Terms of Service.');
+}
 
-// Load account and domain
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $log->error('The provided e-mailadres is invalid.');
+}
+
+/**
+ * Load account and domain
+ */
 try {
     $account = new Account($_SERVER['USERNAME'], $email, 'https://acme-staging.api.letsencrypt.org/directory');
 
