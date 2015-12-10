@@ -80,11 +80,11 @@ $tar->compress(Phar::GZ);
 /**
  * Write latest version to file and move tar.gz to download
  */
-$fh = fopen( 'version', 'w' );
+$fh = fopen('/tmp/repo/versioning/version', 'w' );
 fwrite($fh, $version);
 fclose($fh);
 
-rename($extract . '.tar.gz', __DIR__ . DIRECTORY_SEPARATOR . 'download.tar.gz');
+rename($extract . '.tar.gz', '/tmp/repo/versioning/download.tar.gz');
 
 /**
  * Clean up /tmp directory
