@@ -51,7 +51,25 @@ rrmdir($extract . DIRECTORY_SEPARATOR . 'da-letsencrypt-1.0');
 /**
  * Run composer
  */
-// TODO
+if (!file_exists('/tmp/composer/vendor/autoload.php')) {
+    $composerPhar = new Phar('composer.phar');
+
+    $composerPhar->extractTo('/tmp/composer');
+}
+
+require_once '/tmp/composer/vendor/autoload.php';
+
+use Composer\Console\Application;
+use Composer\Command\UpdateCommand;
+use Symfony\Component\Console\Input\ArrayInput;
+
+chdir($extract);
+
+$input = new ArrayInput(array('command' => 'install'));
+
+$application = new Application();
+$application->setAutoExit(false);
+$application->run($input);
 
 /**
  * Extract folders to .tar.gz
