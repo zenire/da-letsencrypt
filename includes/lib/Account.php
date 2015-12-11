@@ -132,6 +132,15 @@ class Account {
         return $this->username;
     }
 
+    /**
+     * Set e-mail of account
+     *
+     * @param $email
+     */
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+
     function __debugInfo() {
         return [
             'acme' => 'hidden',

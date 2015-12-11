@@ -21,15 +21,30 @@ class Http01Challenge extends BaseChallenge {
 
         if (!file_exists($challengePath)) {
             mkdir($challengePath);
+
+            if (defined('CRON')) {
+                chown($challengePath, $this->domain->account->getUsername());
+                chgrp($challengePath, $this->domain->account->getUsername());
+            }
         }
 
         $challengePath .= DIRECTORY_SEPARATOR . 'acme-challenge';
 
         if (!file_exists($challengePath)) {
             mkdir($challengePath);
+
+            if (defined('CRON')) {
+                chown($challengePath, $this->domain->account->getUsername());
+                chgrp($challengePath, $this->domain->account->getUsername());
+            }
         }
 
         file_put_contents($challengePath . DIRECTORY_SEPARATOR . $this->token, $payload);
+
+        if (defined('CRON')) {
+            chown($challengePath . DIRECTORY_SEPARATOR . $this->token, $this->domain->account->getUsername());
+            chgrp($challengePath . DIRECTORY_SEPARATOR . $this->token, $this->domain->account->getUsername());
+        }
 
         $this->domain->account->acme->selfVerify($this->domain->getDomain(), $this->token, $payload);
 

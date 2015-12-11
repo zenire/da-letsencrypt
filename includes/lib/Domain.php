@@ -96,39 +96,84 @@ class Domain {
      * @throws \Exception
      */
     public function applyCertificates() {
-        $sock = new HTTPSocket();
-        $sock->connect('127.0.0.1', 2222);
-        $sock->set_login('admin');
-        $sock->set_method('POST');
-        $sock->query('/CMD_API_SSL', [
-            'domain' => $this->getDomain(),
-            'action' => 'save',
-            'type' => 'paste',
-            'certificate' => $this->domainKeys->getPrivate() . PHP_EOL . $this->getCertificate(),
-            'submit' => 'Save'
-        ]);
-        $result = $sock->fetch_parsed_body();
+        if (defined('CRON')) {
+            $domainPath = '/usr/local/directadmin/data/users/' . $this->account->getUsername() . '/domains/' . $this->getDomain();
 
-        if ($result['error'] != 0) {
-            throw new \Exception('Error while executing first API request: ' . $result['details']);
-        }
+            file_put_contents($domainPath . '.key', $this->domainKeys->getPrivate());
+            chown($domainPath . '.key', 'diradmin');
+            chgrp($domainPath . '.key', 'diradmin');
+            chmod($domainPath . '.key', 600);
 
-        $sock = new HTTPSocket();
-        $sock->connect('127.0.0.1', 2222);
-        $sock->set_login('admin');
-        $sock->set_method('POST');
-        $sock->query('/CMD_API_SSL', [
-            'domain' => $this->getDomain(),
-            'action' => 'save',
-            'type' => 'cacert',
-            'active' => 'yes',
-            'cacert' => implode("\n", $this->getCertificateAuthorityCertificates()),
-            'submit' => 'Save'
-        ]);
-        $result = $sock->fetch_parsed_body();
+            file_put_contents($domainPath . '.cert', $this->getCertificate());
+            chown($domainPath . '.cert', 'diradmin');
+            chgrp($domainPath . '.cert', 'diradmin');
+            chmod($domainPath . '.cert', 600);
 
-        if ($result['error'] != 0) {
-            throw new \Exception('Error while executing second API request: ' . $result['details']);
+            file_put_contents($domainPath . '.cacert', implode("\n", $this->getCertificateAuthorityCertificates()));
+            chown($domainPath . '.cacert', 'diradmin');
+            chgrp($domainPath . '.cacert', 'diradmin');
+            chmod($domainPath . '.cacert', 600);
+
+            $configString = file_get_contents($domainPath . '.conf');
+
+            $config = array();
+            foreach (explode("\n", $configString) as $configLine) {
+                if (empty($configLine)) {
+                    continue;
+                }
+
+                list($configKey, $configValue) = explode('=', $configLine, 2);
+
+                $config[$configKey] = $configValue;
+            }
+
+            $config['SSLCertificateKeyFile'] = $domainPath . '.key';
+            $config['SSLCertificateFile'] = $domainPath . '.cert';
+            $config['SSLCACertificateFile'] = $domainPath . '.cacert';
+            $config['ssl'] = 'ON';
+
+            $configString = '';
+
+            foreach ($config as $configKey => $configValue) {
+                $configString .= $configKey . '=' . $configValue . PHP_EOL;
+            }
+
+            file_put_contents($domainPath . '.conf', $configString);
+        } else {
+            $sock = new HTTPSocket();
+            $sock->connect('127.0.0.1', 2222);
+            $sock->set_login('admin');
+            $sock->set_method('POST');
+            $sock->query('/CMD_API_SSL', [
+                'domain' => $this->getDomain(),
+                'action' => 'save',
+                'type' => 'paste',
+                'certificate' => $this->domainKeys->getPrivate() . PHP_EOL . $this->getCertificate(),
+                'submit' => 'Save'
+            ]);
+            $result = $sock->fetch_parsed_body();
+
+            if ($result['error'] != 0) {
+                throw new \Exception('Error while executing first API request: ' . $result['details']);
+            }
+
+            $sock = new HTTPSocket();
+            $sock->connect('127.0.0.1', 2222);
+            $sock->set_login('admin');
+            $sock->set_method('POST');
+            $sock->query('/CMD_API_SSL', [
+                'domain' => $this->getDomain(),
+                'action' => 'save',
+                'type' => 'cacert',
+                'active' => 'yes',
+                'cacert' => implode("\n", $this->getCertificateAuthorityCertificates()),
+                'submit' => 'Save'
+            ]);
+            $result = $sock->fetch_parsed_body();
+
+            if ($result['error'] != 0) {
+                throw new \Exception('Error while executing second API request: ' . $result['details']);
+            }
         }
 
         return true;
@@ -176,20 +221,31 @@ class Domain {
      * @return Array
      */
     public function receiveSubdomains() {
-        $sock = new HTTPSocket();
-        $sock->connect('127.0.0.1', 2222);
-        $sock->set_login('admin');
-        $sock->set_method('POST');
-        $sock->query('/CMD_API_SUBDOMAIN', [
-            'domain' => $_SERVER['SESSION_SELECTED_DOMAIN']
-        ]);
-        $result = $sock->fetch_parsed_body();
+        if (defined('CRON')) {
+            $subdomainsFile = file_get_contents('/usr/local/directadmin/data/users/' . $this->account->getUsername() . '/domains/' . $this->getDomain() . '.subdomains');
 
-        $subdomains = [ 'www.' . $this->getDomain() ];
+            $subdomains = ['www.' . $this->getDomain()];
 
-        foreach($result['list'] as $subdomain) {
-            $subdomains[] = $subdomain . '.' . $this->getDomain();
-            $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
+            foreach (explode("\n", $subdomainsFile) as $subdomain) {
+                $subdomains[] = $subdomain . '.' . $this->getDomain();
+                $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
+            }
+        } else {
+            $sock = new HTTPSocket();
+            $sock->connect('127.0.0.1', 2222);
+            $sock->set_login('admin');
+            $sock->set_method('POST');
+            $sock->query('/CMD_API_SUBDOMAIN', [
+                'domain' => $_SERVER['SESSION_SELECTED_DOMAIN']
+            ]);
+            $result = $sock->fetch_parsed_body();
+
+            $subdomains = ['www.' . $this->getDomain()];
+
+            foreach ($result['list'] as $subdomain) {
+                $subdomains[] = $subdomain . '.' . $this->getDomain();
+                $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
+            }
         }
 
         return $subdomains;

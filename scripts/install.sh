@@ -13,6 +13,9 @@ if [ ! -d ${PLUGINPATH}/vendor ]; then
     rm -f /tmp/composer_installer /tmp/composer.phar /tmp/installer
 fi
 
+# Install cronjob
+echo "30 1 * * * root /usr/local/bin/php /usr/local/directadmin/scripts/cron.php" > /etc/cron.d/letsencrypt
+
 # Plugin
 chmod -R 755 ${PLUGINPATH}/admin
 chown -R diradmin:diradmin ${PLUGINPATH}/admin
