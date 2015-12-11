@@ -31,7 +31,7 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], null, $account);
         </tr>
     <? endif; ?>
 
-    <? if (!empty($domain->config())): ?>
+    <? if ($domain->existsInStorage('config.json')): ?>
         <tr>
             <td class="list">Domain</td>
             <td class=list><?= $domain->config('domain'); ?></td>
