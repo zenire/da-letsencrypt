@@ -1,15 +1,55 @@
 #!/usr/local/bin/php
 <?php
+use DirectAdmin\LetsEncrypt\Lib\Account;
 use DirectAdmin\LetsEncrypt\Lib\Domain;
 
 require_once dirname(__DIR__) . '/includes/bootstrap.php';
 
-$domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN']);
+$account = new Account($_SERVER['USERNAME']);
+$domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], null, $account);
 ?>
 
 <table class="list" cellspacing="1" cellpadding="3">
     <tr>
-        <td class=listtitle colspan=2>Request a SSL certificate</td>
+        <td class=listtitle colspan=2>SSL information</td>
+    </tr>
+
+    <tr>
+        <td class="list">Account status</td>
+        <td class=list><?= (($account->config('active') == null) ? 'Not generated yet' : ucfirst($account->config('active'))); ?></td>
+    </tr>
+
+    <tr>
+        <td class="list">Account keys</td>
+        <td class=list><?= ((!$account->existsInStorage('private.key') || !$account->existsInStorage('private.key')) ? 'Not generated yet' : 'Generated (<a href="/CMD_PLUGINS/da-letsencrypt/account_keys.html">view / edit</a>)'); ?></td>
+    </tr>
+
+    <? if (!empty($domain->config())): ?>
+        <tr>
+            <td class="list">Domain</td>
+            <td class=list><?= $domain->config('domain'); ?></td>
+        </tr>
+
+        <? if (!empty($domain->getSubdomains())): ?>
+            <tr>
+                <td class="list">Subdomains</td>
+                <td class=list><?= implode(', ', $domain->config('subdomains')); ?></td>
+            </tr>
+        <? endif; ?>
+
+        <tr>
+            <td class="list">SSL status</td>
+            <td class=list><?= ucfirst($domain->config('status')); ?></td>
+        </tr>
+
+        <tr>
+            <td class="list">SSL expire date</td>
+            <td class=list><?= $domain->config('expire'); ?></td>
+        </tr>
+    <? endif; ?>
+
+    <tr>
+        <td class=listtitle colspan=2>Request a (new) SSL certificate</td>
     </tr>
 
     <form action="/CMD_PLUGINS/da-letsencrypt/actions/request.html" method="POST">

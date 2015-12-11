@@ -35,21 +35,15 @@ class Account {
      * Initialize Account
      *
      * @param string $username
-     * @param string $email
-     * @param string $acmeServer
+     * @param string|null $email
+     * @param string|null $acmeServer
      * @throws \Exception
      */
-    function __construct($username, $email, $acmeServer) {
+    function __construct($username, $email = null, $acmeServer = null) {
         $this->username = $username;
         $this->email = $email;
 
         $this->acmeServer = $acmeServer;
-
-        if (!$this->loadKeys()) {
-            $this->createKeys();
-
-            $this->register();
-        }
     }
 
     /**
@@ -106,6 +100,8 @@ class Account {
 
             $this->writeToStorage('public.key', $this->keyPair->getPublic());
             $this->writeToStorage('private.key', $this->keyPair->getPrivate());
+
+            $this->config('status', 'keys generated');
         } else {
             throw new \Exception('CPU was to slow, we\'ve not yet coded this part.');
         }
@@ -122,6 +118,8 @@ class Account {
      */
     public function register() {
         $this->acme->register($this->email);
+
+        $this->config('status', 'registered at Let\'s Encrypt');
     }
 
     /**

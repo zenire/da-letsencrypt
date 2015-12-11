@@ -1,0 +1,33 @@
+#!/usr/local/bin/php
+<?php
+
+namespace DirectAdmin\LetsEncrypt\Users\Actions;
+
+use DirectAdmin\LetsEncrypt\Lib\Account;
+use DirectAdmin\LetsEncrypt\Lib\Challenges;
+use DirectAdmin\LetsEncrypt\Lib\Domain;
+use DirectAdmin\LetsEncrypt\Lib\Logger;
+
+require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+
+$log = new Logger();
+$log->short('Successfully saved account keys.');
+
+/**
+ * Check if both keys are defined
+ */
+if (empty($_POST['private']) || empty($_POST['public'])) {
+    $log->error('One of the keys are not defined.');
+}
+
+/**
+ * Save both
+ */
+$account = new Account($_SERVER['USERNAME']);
+$account->writeToStorage('private.key', $_POST['private']);
+$account->writeToStorage('public.key', $_POST['public']);
+
+$log->info('Writed keys to disk.');
+
+$log->output();
+

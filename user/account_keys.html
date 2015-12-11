@@ -1,0 +1,33 @@
+#!/usr/local/bin/php
+<?php
+use DirectAdmin\LetsEncrypt\Lib\Account;
+
+require_once dirname(__DIR__) . '/includes/bootstrap.php';
+
+$account = new Account($_SERVER['USERNAME']);
+?>
+
+<table class="list" cellspacing="1" cellpadding="3">
+    <tr>
+        <td class=listtitle colspan=2>Account keys</td>
+    </tr>
+
+    <form action="/CMD_PLUGINS/da-letsencrypt/actions/save_account_keys.html" method="POST">
+        <tr>
+            <td class="list">Private key</td>
+            <td class=list><textarea name="private" style="height: 400px; width: 100%;"><?= $account->getFromStorage('private.key'); ?></textarea></td>
+        </tr>
+
+        <tr>
+            <td class="list">Public key</td>
+            <td class=list><textarea name="public" style="height: 250px; width: 100%;"><?= $account->getFromStorage('public.key'); ?></textarea></td>
+        </tr>
+
+        <tr>
+            <td class="listtitle" colspan="6">
+                <input type="button" value="Back" onclick="window.location = '/CMD_PLUGINS/da-letsencrypt/index.html';">
+                <input type="submit" style="float: right;">
+            </td>
+        </tr>
+    </form>
+</table>

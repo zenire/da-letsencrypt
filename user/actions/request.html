@@ -32,6 +32,12 @@ if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL
 try {
     $account = new Account($_SERVER['USERNAME'], $_POST['email'], 'https://acme-staging.api.letsencrypt.org/directory');
 
+    if (!$account->loadKeys()) {
+        $account->createKeys();
+
+        $account->register();
+    }
+
     $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], (array) $_POST['subdomains'], $account);
 } catch (\Exception $e) {
     $log->error($e->getMessage());
@@ -73,8 +79,11 @@ $log->setErrorShort('Error while saving SSL certificates to DirectAdmin');
 try {
     $domain->applyCertificates();
 
-    $domain->config('status', 'active');
-    $domain->config('expire', date('Y-m-d', strtotime('+60 days')));
+    $domain->config('domain', $domain->getDomain());
+    $domain->config('subdomains', $domain->getSubdomains());
+
+    $domain->config('status', 'applied to DirectAdmin');
+    $domain->config('expire', date('Y-m-d', strtotime('+50 days')));
 } catch(\Exception $e) {
     $log->error($e->getMessage());
 }
