@@ -17,6 +17,7 @@ class Domain {
     use ConfigurableTrait;
 
     private $domain;
+    private $subdomains;
 
     private $certificates;
 
@@ -28,8 +29,9 @@ class Domain {
      * @param String $domain Domain name
      * @param Account $account Account
      */
-    function __construct($domain, $account) {
+    function __construct($domain, $subdomains, $account) {
         $this->domain = $domain;
+        $this->subdomains = $subdomains;
         $this->account = $account;
     }
 
@@ -70,7 +72,10 @@ class Domain {
             }
         }
 
-        $location = $this->account->acme->requestCertificate($domainKeys, [$this->getHostname()]);
+        $domains = (array) $this->getDomain();
+        $domains += $this->getSubdomains();
+
+        $location = $this->account->acme->requestCertificate($domainKeys, $domains);
         $this->certificates = $this->account->acme->pollForCertificate($location);
 
         return $this->certificates;
@@ -88,7 +93,7 @@ class Domain {
         $sock->set_login('admin');
         $sock->set_method('POST');
         $sock->query('/CMD_API_SSL', [
-            'domain' => $this->getHostname(),
+            'domain' => $this->getDomain(),
             'action' => 'save',
             'type' => 'paste',
             'certificate' => $this->domainKeys->getPrivate() . PHP_EOL . $this->getCertificate(),
@@ -105,7 +110,7 @@ class Domain {
         $sock->set_login('admin');
         $sock->set_method('POST');
         $sock->query('/CMD_API_SSL', [
-            'domain' => $this->getHostname(),
+            'domain' => $this->getDomain(),
             'action' => 'save',
             'type' => 'cacert',
             'active' => 'yes',
@@ -144,8 +149,17 @@ class Domain {
      *
      * @return String
      */
-    public function getHostname() {
+    public function getDomain() {
         return $this->domain;
+    }
+
+    /**
+     * Get list of subdomains
+     *
+     * @return Array
+     */
+    public function getSubdomains() {
+        return $this->subdomains;
     }
 
     /**
@@ -154,7 +168,7 @@ class Domain {
      * @return string
      */
     public function getPath() {
-        return DIRECTORY_SEPARATOR . 'home' . DIRECTORY_SEPARATOR . $this->account->getUsername() . DIRECTORY_SEPARATOR . 'domains' . DIRECTORY_SEPARATOR . $this->domain;
+        return DIRECTORY_SEPARATOR . 'home' . DIRECTORY_SEPARATOR . $this->account->getUsername() . DIRECTORY_SEPARATOR . 'domains' . DIRECTORY_SEPARATOR . $this->getDomain();
     }
 
     /**

@@ -32,7 +32,7 @@ if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL
 try {
     $account = new Account($_SERVER['USERNAME'], $_POST['email'], 'https://acme-staging.api.letsencrypt.org/directory');
 
-    $domain = new Domain($_POST['domain'], $account);
+    $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], (array) $_POST['subdomains'], $account);
 } catch (\Exception $e) {
     $log->error($e->getMessage());
 }
@@ -49,7 +49,7 @@ try {
     $log->error($e->getMessage());
 }
 
-$log->info('Successfully completed challenge for ' . $domain->getHostname() . '.');
+$log->info('Successfully completed challenge for ' . $domain->getDomain() . '.');
 
 /**
  * Request certificate

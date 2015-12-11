@@ -31,7 +31,7 @@ class Http01Challenge extends BaseChallenge {
 
         file_put_contents($challengePath . DIRECTORY_SEPARATOR . $this->token, $payload);
 
-        $this->domain->account->acme->selfVerify($this->domain->getHostname(), $this->token, $payload);
+        $this->domain->account->acme->selfVerify($this->domain->getDomain(), $this->token, $payload);
 
         $this->domain->account->acme->answerChallenge($this->uri, $payload);
         $this->domain->account->acme->pollForChallenge($this->location);

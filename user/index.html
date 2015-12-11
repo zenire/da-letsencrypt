@@ -1,5 +1,9 @@
 #!/usr/local/bin/php
-<?php require_once dirname(__DIR__) . '/includes/bootstrap.php'; ?>
+<?php
+use DirectAdmin\LetsEncrypt\Lib\HTTPSocket;
+
+require_once dirname(__DIR__) . '/includes/bootstrap.php';
+?>
 
 <table class="list" cellspacing="1" cellpadding="3">
     <tr>
@@ -7,11 +11,34 @@
     </tr>
 
     <form action="/CMD_PLUGINS/da-letsencrypt/actions/request.html" method="POST">
-        <input type="hidden" name="domain" value="<?= $domain; ?>"/>
-
         <tr>
             <td class="list">Domain</td>
-            <td class=list><?= $domain; ?></td>
+            <td class=list><?= $_SERVER['SESSION_SELECTED_DOMAIN']; ?></td>
+        </tr>
+        <tr>
+            <td class="list">Subdomains</td>
+            <td class=list>
+                <?php
+
+                $sock = new HTTPSocket();
+                $sock->connect('127.0.0.1', 2222);
+                $sock->set_login('admin');
+                $sock->set_method('POST');
+                $sock->query('/CMD_API_SUBDOMAIN', [
+                    'domain' => $_SERVER['SESSION_SELECTED_DOMAIN']
+                ]);
+                $result = $sock->fetch_parsed_body();
+
+                echo '<input type="checkbox" name="subdomains[]" value="www.' . $_SERVER['SESSION_SELECTED_DOMAIN'] .'" checked="checked" /> www.' . $_SERVER['SESSION_SELECTED_DOMAIN'] .'<br/>';
+
+                foreach($result['list'] as $subdomain) {
+                    $subdomain = $subdomain . '.' . $_SERVER['SESSION_SELECTED_DOMAIN'];
+
+                    echo '<input type="checkbox" name="subdomains[]" value="' . $subdomain . '" checked="checked" /> ' . $subdomain .'<br/>';
+                    echo '<input type="checkbox" name="subdomains[]" value="www.' . $subdomain . '" checked="checked" /> www.' . $subdomain .'<br/>';
+                }
+                ?>
+            </td>
         </tr>
         <tr>
             <td class="list">E-mail Address</td>

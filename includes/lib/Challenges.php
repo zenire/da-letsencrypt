@@ -33,7 +33,7 @@ class Challenges {
      * @return string Challenges
      */
     public function receiveChallenges() {
-        list($this->location, $response) = $this->domain->account->acme->requestChallenges($this->domain->getHostname());
+        list($this->location, $response) = $this->domain->account->acme->requestChallenges($this->domain->getDomain());
 
         $this->combinations = $response->combinations;
         $this->status = $response->status;
