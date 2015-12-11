@@ -120,6 +120,7 @@ class Account {
         $this->acme->register($this->email);
 
         $this->config('status', 'registered at Let\'s Encrypt');
+        $this->config('email', $this->email);
     }
 
     /**

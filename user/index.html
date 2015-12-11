@@ -24,6 +24,13 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], null, $account);
         <td class=list><?= ((!$account->existsInStorage('private.key') || !$account->existsInStorage('private.key')) ? 'Not generated yet' : 'Generated (<a href="/CMD_PLUGINS/da-letsencrypt/account_keys.html">view / edit</a>)'); ?></td>
     </tr>
 
+    <? if (!empty($account->config('email'))): ?>
+        <tr>
+            <td class="list">Account email</td>
+            <td class=list><?= $account->config('email'); ?></td>
+        </tr>
+    <? endif; ?>
+
     <? if (!empty($domain->config())): ?>
         <tr>
             <td class="list">Domain</td>
@@ -44,7 +51,7 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], null, $account);
 
         <tr>
             <td class="list">SSL expire date</td>
-            <td class=list><?= $domain->config('expire'); ?></td>
+            <td class=list><?= $domain->config('expire'); ?> (will automatically be renewed)</td>
         </tr>
     <? endif; ?>
 
@@ -70,7 +77,7 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], null, $account);
         <tr>
             <td class="list">E-mail Address</td>
             <td class=list>
-                <input type="text" name="email" value="" /> (e.g. example@domain.com)
+                <input type="text" name="email" value="<?= $account->config('email'); ?>" /> (e.g. example@domain.com)
             </td>
         </tr>
         <tr>
