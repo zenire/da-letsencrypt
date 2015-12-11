@@ -26,13 +26,21 @@ class Domain {
     public $account;
 
     /**
+     * Initialize a domain with subdomains
+     *
      * @param String $domain Domain name
-     * @param Account $account Account
+     * @param Array|null $subdomains
+     * @param Account|null $account Account
      */
-    function __construct($domain, $subdomains, $account) {
+    function __construct($domain, $subdomains = null, $account = null) {
         $this->domain = $domain;
-        $this->subdomains = $subdomains;
         $this->account = $account;
+
+        if ($subdomains == null) {
+            $this->subdomains = $this->receiveSubdomains();
+        } else {
+            $this->subdomains = $subdomains;
+        }
     }
 
     /**
@@ -160,6 +168,31 @@ class Domain {
      */
     public function getSubdomains() {
         return $this->subdomains;
+    }
+
+    /**
+     * Receive available subdomains from Directadmin
+     *
+     * @return Array
+     */
+    public function receiveSubdomains() {
+        $sock = new HTTPSocket();
+        $sock->connect('127.0.0.1', 2222);
+        $sock->set_login('admin');
+        $sock->set_method('POST');
+        $sock->query('/CMD_API_SUBDOMAIN', [
+            'domain' => $_SERVER['SESSION_SELECTED_DOMAIN']
+        ]);
+        $result = $sock->fetch_parsed_body();
+
+        $subdomains = [ 'www.' . $this->getDomain() ];
+
+        foreach($result['list'] as $subdomain) {
+            $subdomains[] = $subdomain . '.' . $this->getDomain();
+            $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
+        }
+
+        return $subdomains;
     }
 
     /**
