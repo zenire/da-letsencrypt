@@ -14,7 +14,7 @@ if [ ! -d ${PLUGINPATH}/vendor ]; then
 fi
 
 # Install cronjob
-echo "30 1 * * * root /usr/local/bin/php /usr/local/directadmin/scripts/cron.php" > /etc/cron.d/letsencrypt
+echo "30 1 * * * root /usr/local/bin/php /usr/local/directadmin/plugins/da-letsencrypt/scripts/cron.php" > /etc/cron.d/letsencrypt
 
 # Plugin
 chmod -R 755 ${PLUGINPATH}/admin
