@@ -17,5 +17,5 @@ Change `active=no` and `installed=no` to `active=yes` and `installed=yes` in `pl
 
 ### Update
 `cd /usr/local/directadmin/plugins/da-letsencrypt`  
-`git update`  
+`git pull`  
 `composer update`  
