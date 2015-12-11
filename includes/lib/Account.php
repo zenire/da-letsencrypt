@@ -31,6 +31,14 @@ class Account {
     /** @var  AcmeService */
     public $acme;
 
+    /**
+     * Initialize Account
+     *
+     * @param string $username
+     * @param string $email
+     * @param string $acmeServer
+     * @throws \Exception
+     */
     function __construct($username, $email, $acmeServer) {
         $this->username = $username;
         $this->email = $email;
