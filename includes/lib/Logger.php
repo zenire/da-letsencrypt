@@ -24,6 +24,17 @@ class Logger {
     }
 
     /**
+     * Add a line to the logger
+     *
+     * @param $line
+     */
+    public function log($line) {
+        echo $line . PHP_EOL;
+
+        $this->lines[] = $line;
+    }
+
+    /**
      * Set a short for when the action succeess
      *
      * @param $short
@@ -61,6 +72,15 @@ class Logger {
             $this->output();
             exit(500);
         }
+    }
+
+    /**
+     * Return the current log
+     *
+     * @return array
+     */
+    public function getLog() {
+        return $this->lines;
     }
 
     /**

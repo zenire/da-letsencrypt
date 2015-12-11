@@ -102,17 +102,17 @@ class Domain {
             file_put_contents($domainPath . '.key', $this->domainKeys->getPrivate());
             chown($domainPath . '.key', 'diradmin');
             chgrp($domainPath . '.key', 'diradmin');
-            chmod($domainPath . '.key', 600);
+            chmod($domainPath . '.key', 0600);
 
             file_put_contents($domainPath . '.cert', $this->getCertificate());
             chown($domainPath . '.cert', 'diradmin');
             chgrp($domainPath . '.cert', 'diradmin');
-            chmod($domainPath . '.cert', 600);
+            chmod($domainPath . '.cert', 0600);
 
             file_put_contents($domainPath . '.cacert', implode("\n", $this->getCertificateAuthorityCertificates()));
             chown($domainPath . '.cacert', 'diradmin');
             chgrp($domainPath . '.cacert', 'diradmin');
-            chmod($domainPath . '.cacert', 600);
+            chmod($domainPath . '.cacert', 0600);
 
             $configString = file_get_contents($domainPath . '.conf');
 
