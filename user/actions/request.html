@@ -35,7 +35,15 @@ try {
         $account->register();
     }
 
-    $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], (array) $_POST['subdomains'], $account);
+    $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
+
+    if (isset($_POST['subdomains']) && is_array($_POST['subdomains']) && !empty($_POST['subdomains'])) {
+        foreach ($_POST['subdomains'] as $subdomain) {
+            if (!in_array($subdomain, $domain->getSubdomains())) {
+                throw new Exception('One of the selected subdomains isn\'t known in DirectAdmin');
+            }
+        }
+    }
 } catch (\Exception $e) {
     $log->error($e->getMessage());
 }
@@ -61,7 +69,7 @@ $log->setErrorShort('Error while requesting SSL certificates');
 
 try {
     $domain->createKeys();
-    $domain->requestCertificate();
+    $domain->requestCertificate(null, (array) $_POST['subdomains']);
 } catch(\Exception $e) {
     $log->error($e->getMessage());
 }

@@ -32,15 +32,10 @@ class Domain {
      * @param Array|null $subdomains
      * @param Account|null $account Account
      */
-    function __construct($domain, $subdomains = null, $account = null) {
+    function __construct($domain, $account = null) {
         $this->domain = $domain;
         $this->account = $account;
-
-        if ($subdomains == null) {
-            $this->subdomains = $this->receiveSubdomains();
-        } else {
-            $this->subdomains = $subdomains;
-        }
+        $this->subdomains = $this->receiveSubdomains();
     }
 
     /**
@@ -67,11 +62,12 @@ class Domain {
      * Request certificate at ACME
      *
      * @param KeyPair|null $domainKeys
+     * @param array|null $subdomains List of subdomains to request
      * @return array
      * @throws \Exception
      * @throws \Kelunik\Acme\AcmeException
      */
-    public function requestCertificate($domainKeys = null) {
+    public function requestCertificate($domainKeys = null, $subdomains = null) {
         if ($domainKeys == null) {
             if ($this->domainKeys == null) {
                 $this->createKeys();
@@ -81,7 +77,12 @@ class Domain {
         }
 
         $domains = (array) $this->getDomain();
-        $domains += $this->getSubdomains();
+
+        if ($subdomains == null) {
+            $domains += $this->getSubdomains();
+        } else {
+            $domains += $subdomains;
+        }
 
         $location = $this->account->acme->requestCertificate($domainKeys, $domains);
         $this->certificates = $this->account->acme->pollForCertificate($location);
