@@ -29,7 +29,6 @@ class Domain {
      * Initialize a domain with subdomains
      *
      * @param String $domain Domain name
-     * @param Array|null $subdomains
      * @param Account|null $account Account
      */
     function __construct($domain, $account = null) {

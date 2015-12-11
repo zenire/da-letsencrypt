@@ -6,7 +6,7 @@ use DirectAdmin\LetsEncrypt\Lib\Domain;
 require_once dirname(__DIR__) . '/includes/bootstrap.php';
 
 $account = new Account($_SERVER['USERNAME']);
-$domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], null, $account);
+$domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
 ?>
 
 <table class="list" cellspacing="1" cellpadding="3">
