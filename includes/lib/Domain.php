@@ -134,31 +134,12 @@ class Domain {
             chgrp($domainPath . '.cacert', 'diradmin');
             chmod($domainPath . '.cacert', 0600);
 
-            $configString = file_get_contents($domainPath . '.conf');
+            $config = new Config($domainPath . '.conf');
 
-            $config = array();
-            foreach (explode("\n", $configString) as $configLine) {
-                if (empty($configLine)) {
-                    continue;
-                }
-
-                list($configKey, $configValue) = explode('=', $configLine, 2);
-
-                $config[$configKey] = $configValue;
-            }
-
-            $config['SSLCertificateKeyFile'] = $domainPath . '.key';
-            $config['SSLCertificateFile'] = $domainPath . '.cert';
-            $config['SSLCACertificateFile'] = $domainPath . '.cacert';
-            $config['ssl'] = 'ON';
-
-            $configString = '';
-
-            foreach ($config as $configKey => $configValue) {
-                $configString .= $configKey . '=' . $configValue . PHP_EOL;
-            }
-
-            file_put_contents($domainPath . '.conf', $configString);
+            $config->config('SSLCertificateKeyFile', $domainPath . '.key');
+            $config->config('SSLCertificateFile', $domainPath . '.cert');
+            $config->config('SSLCACertificateFile', $domainPath . '.cacert');
+            $config->config('ssl', 'ON');
         } else {
             $sock = $this->getSocket();
             $sock->set_method('POST');
