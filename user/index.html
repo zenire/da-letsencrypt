@@ -67,7 +67,7 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
         <td class=list>
             <form action="/CMD_PLUGINS/da-letsencrypt/actions/clear.html" method="POST" style="margin: 0;">
                 <input type="submit" name="account" value="Account" onclick="return confirm('Are you sure? All domains associated will be removed.');" />
-                <input type="submit" name="domain" value="Domain (<?= $domain->getDomain(); ?>)" />
+                <input type="submit" name="domain" value="Domain (<?= $domain->getDomain(); ?>)" onclick="return confirm('Are you sure?');" />
             </form>
         </td>
     </tr>
@@ -85,8 +85,8 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
             <td class="list">Subdomains</td>
             <td class=list>
                 <?php
-                foreach($domain->getSubdomains() as $subdomain) {
-                    echo '<input type="checkbox" name="subdomains[]" value="' . $subdomain . '" checked="checked" /> ' . $subdomain .'<br/>';
+                foreach($domain->getSubdomains() as $i => $subdomain) {
+                    echo '<input type="checkbox" id="subdomain_' . $i . '" name="subdomains[]" value="' . $subdomain . '" checked="checked" /> <label for="subdomain_' . $i . '">' . $subdomain .'</label><br/>';
                 }
                 ?>
             </td>

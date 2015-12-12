@@ -14,13 +14,13 @@ $account = new Account($_SERVER['USERNAME']);
 
     <form action="/CMD_PLUGINS/da-letsencrypt/actions/save_account_keys.html" method="POST">
         <tr>
-            <td class="list">Private key</td>
-            <td class=list><textarea name="private" style="height: 400px; width: 100%;"><?= $account->getFromStorage('private.key'); ?></textarea></td>
+            <td class="list"><label for="private">Private key</label></td>
+            <td class=list><textarea id="private" name="private" style="height: 400px; width: 100%;"><?= $account->getFromStorage('private.key'); ?></textarea></td>
         </tr>
 
         <tr>
-            <td class="list">Public key</td>
-            <td class=list><textarea name="public" style="height: 250px; width: 100%;"><?= $account->getFromStorage('public.key'); ?></textarea></td>
+            <td class="list"><label for="public">Public key</label></td>
+            <td class=list><textarea id="public" name="public" style="height: 250px; width: 100%;"><?= $account->getFromStorage('public.key'); ?></textarea></td>
         </tr>
 
         <tr>
