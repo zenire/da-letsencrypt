@@ -1,0 +1,57 @@
+#!/usr/local/bin/php
+<?php
+use DirectAdmin\LetsEncrypt\Lib\Account;
+use DirectAdmin\LetsEncrypt\Lib\Challenges;
+use DirectAdmin\LetsEncrypt\Lib\Domain;
+use DirectAdmin\LetsEncrypt\Lib\Logger;
+
+require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+
+$log = new Logger();
+
+/**
+ * Check if both keys are defined
+ */
+if (!isset($_POST['account']) && !isset($_POST['domain'])) {
+    $log->error('You didn\'t choose an item to clear.');
+}
+
+/**
+ * Save both
+ */
+$account = new Account($_SERVER['USERNAME']);
+
+if (isset($_POST['account'])) {
+    $log->short('Successfully deleted account and domains.');
+
+    $domains = (array) $account->config('domains');
+} else {
+    $log->short('Successfully deleted domain.');
+
+    $domains = [ $_SERVER['SESSION_SELECTED_DOMAIN'] ];
+}
+
+if (!empty($domains)) {
+    foreach ($domains as $domain) {
+        $domain = new Domain($domain, $account);
+
+        try {
+            $domain->removeCertificates();
+        } catch (Exception $e) {
+            $log->error($e->getMessage());
+        }
+
+        $domain->clearStorage();
+
+        $log->info('Removed domain ' . $domain->getDomain());
+    }
+}
+
+if (isset($_POST['account'])) {
+    $account->clearStorage();
+
+    $log->info('Removed account');
+}
+
+$log->output();
+

@@ -180,6 +180,29 @@ class Domain {
     }
 
     /**
+     * Disable certificates in DirectAdmin
+     *
+     * @throws \Exception
+     */
+    public function removeCertificates() {
+        $sock = new HTTPSocket();
+        $sock->connect('127.0.0.1', 2222);
+        $sock->set_login('admin');
+        $sock->set_method('POST');
+        $sock->query('/CMD_API_SSL', [
+            'domain' => $this->getDomain(),
+            'action' => 'save',
+            'type' => 'server',
+            'submit' => 'Save'
+        ]);
+        $result = $sock->fetch_parsed_body();
+
+        if ($result['error'] != 0) {
+            throw new \Exception('Error while executing first API request: ' . $result['details']);
+        }
+    }
+
+    /**
      * Get the domains certificate
      *
      * @return string

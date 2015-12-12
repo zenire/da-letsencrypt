@@ -63,6 +63,16 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
     <? endif; ?>
 
     <tr>
+        <td class="list">Clear/reset</td>
+        <td class=list>
+            <form action="/CMD_PLUGINS/da-letsencrypt/actions/clear.html" method="POST" style="margin: 0;">
+                <input type="submit" name="account" value="Account" onclick="return confirm('Are you sure? All domains associated will be removed.');" />
+                <input type="submit" name="domain" value="Domain (<?= $domain->getDomain(); ?>)" />
+            </form>
+        </td>
+    </tr>
+
+    <tr>
         <td class=listtitle colspan=2>Request a (new) SSL certificate</td>
     </tr>
 

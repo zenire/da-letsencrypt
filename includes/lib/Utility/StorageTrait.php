@@ -48,4 +48,29 @@ trait StorageTrait {
     public function existsInStorage($fileName) {
         return file_exists($this->getStoragePath() . DIRECTORY_SEPARATOR . $fileName);
     }
+
+    /**
+     * Remove the storage
+     *
+     * @return bool
+     */
+    public function clearStorage($path = null) {
+        if ($path == null) {
+            $path = $this->getStoragePath();
+        }
+
+        foreach(scandir($path) as $file) {
+            if (in_array($file, ['.', '..'])) {
+                continue;
+            }
+
+            if (is_dir($path . DIRECTORY_SEPARATOR . $file)) {
+                $this->clearStorage($path . DIRECTORY_SEPARATOR . $file);
+            } else {
+                unlink($path . DIRECTORY_SEPARATOR . $file);
+            }
+        }
+
+        rmdir($path);
+    }
 }
