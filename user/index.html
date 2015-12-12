@@ -24,6 +24,13 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
         <td class=list><?= ((!$account->existsInStorage('private.key') || !$account->existsInStorage('private.key')) ? 'Not generated yet' : 'Generated (<a href="/CMD_PLUGINS/da-letsencrypt/account_keys.html">view / edit</a>)'); ?></td>
     </tr>
 
+    <? if (!empty($account->config('domains'))): ?>
+        <tr>
+            <td class="list">Account domains</td>
+            <td class=list><?= implode(', ', $account->config('domains')); ?></td>
+        </tr>
+    <? endif; ?>
+
     <? if (!empty($account->config('email'))): ?>
         <tr>
             <td class="list">Account email</td>
