@@ -21,6 +21,8 @@ class Domain {
 
     private $certificates;
 
+    private $socket;
+
     /** @var  KeyPair */
     public $domainKeys;
     public $account;
@@ -35,6 +37,24 @@ class Domain {
         $this->domain = $domain;
         $this->account = $account;
         $this->subdomains = $this->receiveSubdomains();
+    }
+
+    /**
+     * Get already initialized HTTPSocket, or create a new one
+     *
+     * @return HTTPSocket
+     */
+    private function getSocket() {
+        if (!$this->socket) {
+            $address = '127.0.0.1';
+            $address = (isset($_SERVER['SSL']) && $_SERVER['SSL'] == "1") ? 'ssl://' . $address : $address;
+
+            $this->socket = new HTTPSocket();
+            $this->socket->connect($address, 2222);
+            $this->socket->set_login('admin');
+        }
+
+        return $this->socket;
     }
 
     /**
@@ -140,9 +160,7 @@ class Domain {
 
             file_put_contents($domainPath . '.conf', $configString);
         } else {
-            $sock = new HTTPSocket();
-            $sock->connect('127.0.0.1', 2222);
-            $sock->set_login('admin');
+            $sock = $this->getSocket();
             $sock->set_method('POST');
             $sock->query('/CMD_API_SSL', [
                 'domain' => $this->getDomain(),
@@ -157,9 +175,6 @@ class Domain {
                 throw new \Exception('Error while executing first API request: ' . $result['details']);
             }
 
-            $sock = new HTTPSocket();
-            $sock->connect('127.0.0.1', 2222);
-            $sock->set_login('admin');
             $sock->set_method('POST');
             $sock->query('/CMD_API_SSL', [
                 'domain' => $this->getDomain(),
@@ -185,9 +200,7 @@ class Domain {
      * @throws \Exception
      */
     public function removeCertificates() {
-        $sock = new HTTPSocket();
-        $sock->connect('127.0.0.1', 2222);
-        $sock->set_login('admin');
+        $sock = $this->getSocket();
         $sock->set_method('POST');
         $sock->query('/CMD_API_SSL', [
             'domain' => $this->getDomain(),
@@ -254,9 +267,7 @@ class Domain {
                 $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
             }
         } else {
-            $sock = new HTTPSocket();
-            $sock->connect('127.0.0.1', 2222);
-            $sock->set_login('admin');
+            $sock = $this->getSocket();
             $sock->set_method('POST');
             $sock->query('/CMD_API_SUBDOMAIN', [
                 'domain' => $_SERVER['SESSION_SELECTED_DOMAIN']

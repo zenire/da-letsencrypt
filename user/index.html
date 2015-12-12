@@ -92,15 +92,15 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
             </td>
         </tr>
         <tr>
-            <td class="list">E-mail Address</td>
+            <td class="list"><label for="email">E-mail Address</label></td>
             <td class=list>
-                <input type="text" name="email" value="<?= $account->config('email'); ?>" /> (e.g. example@domain.com)
+                <input type="text" id="email" name="email" value="<?= $account->config('email'); ?>" /> (e.g. example@domain.com)
             </td>
         </tr>
         <tr>
             <td class="listtitle" align="right" colspan="6">
-                <input type="checkbox" name="accept_tos" onclick="document.getElementsByClassName('submit_accept_tos')[0].disabled = !this.checked;">
-                I accept the <a href="https://letsencrypt.org/repository/" target="_blank">Terms of Service</a> of Let's Encrypt.
+                <input type="checkbox" id="accept_tos" name="accept_tos" onclick="document.getElementsByClassName('submit_accept_tos')[0].disabled = !this.checked;">
+                <label for="accept_tos">I accept the <a href="https://letsencrypt.org/repository/" target="_blank">Terms of Service</a> of Let's Encrypt.</label>
 
                 <input type="submit" class="submit_accept_tos" disabled="disabled">
             </td>
