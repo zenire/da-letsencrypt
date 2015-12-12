@@ -1,1 +1,33 @@
 #!/usr/local/bin/php
+<?php
+use DirectAdmin\LetsEncrypt\Lib\Config;
+
+/* @var array $servers */
+require_once dirname(__DIR__) . '/includes/bootstrap.php';
+
+$config = new Config();
+?>
+<table class="list" cellspacing="1" cellpadding="3">
+    <tr>
+        <td class=listtitle colspan=2>SSL information</td>
+    </tr>
+
+    <form action="/CMD_PLUGINS_ADMIN/da-letsencrypt/actions/save.html" method="POST">
+        <tr>
+            <td class="list">ACME server</td>
+            <td class=list>
+                <input type="radio" id="server_live" name="server" value="live" <?= (($config->config('server') == $servers['live']) ? 'checked="checked"' : ''); ?>onclick="return confirm('Are you sure you want to change this? All currently saved accounts will being removed.');"/> <label for="server_live">Let's Encrypt Live</label> <br/>
+                <input type="radio" id="server_staging" name="server" value="staging" <?= (($config->config('server') == $servers['staging']) ? 'checked="checked"' : ''); ?> onclick="return confirm('Are you sure you want to change this? All currently saved accounts will being removed.');" /> <label for="server_staging">Let's Encrypt Staging</label> <br/>
+
+                <? $custom = !in_array($config->config('server'), $servers); ?>
+                <input type="radio" id="server_custom" name="server" value="custom" <?= (($custom) ? 'checked="checked"' : ''); ?> onclick="return confirm('Are you sure you want to change this? All currently saved accounts will being removed.');" /> <label for="server_custom">Custom:</label> <input type="text" style="width: 50%;" name="custom_server" value="<?= (($custom) ? $config->config('server') : ''); ?>" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="listtitle" align="right" colspan="6">
+                <input type="submit">
+            </td>
+        </tr>
+    </form>
+</table>

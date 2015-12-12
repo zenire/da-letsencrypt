@@ -2,11 +2,13 @@
 <?php
 use DirectAdmin\LetsEncrypt\Lib\Account;
 use DirectAdmin\LetsEncrypt\Lib\Challenges;
+use DirectAdmin\LetsEncrypt\Lib\Config;
 use DirectAdmin\LetsEncrypt\Lib\Domain;
 use DirectAdmin\LetsEncrypt\Lib\Logger;
 
 require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
 
+$config = new Config();
 $log = new Logger();
 $log->short('Successfully applied SSL certificate for ' . $_POST['domain']);
 
@@ -27,7 +29,7 @@ if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL
 
 /** @var Domain $domain */
 try {
-    $account = new Account($_SERVER['USERNAME'], $_POST['email'], 'https://acme-staging.api.letsencrypt.org/directory');
+    $account = new Account($_SERVER['USERNAME'], $_POST['email'], $config->config('server'));
 
     if (!$account->loadKeys()) {
         $account->createKeys();

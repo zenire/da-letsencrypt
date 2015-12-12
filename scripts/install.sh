@@ -18,16 +18,7 @@ echo "30 1 * * * root /usr/local/bin/php /usr/local/directadmin/plugins/da-letse
 
 # Plugin
 chmod -R 755 ${PLUGINPATH}/admin
-chown -R diradmin:diradmin ${PLUGINPATH}/admin
-
-chmod -R 755 ${PLUGINPATH}/reseller
-chown -R diradmin:diradmin ${PLUGINPATH}/reseller
-
-chmod -R 755 ${PLUGINPATH}/user
-chown -R diradmin:diradmin ${PLUGINPATH}/user
-
-chmod -R 755 ${PLUGINPATH}/hooks
-chown -R diradmin:diradmin ${PLUGINPATH}/hooks
+chown -R diradmin:diradmin ${PLUGINPATH}
 
 chmod -R 777 ${PLUGINPATH}/logs
 chown -R diradmin:diradmin ${PLUGINPATH}/logs
@@ -35,6 +26,9 @@ chown -R diradmin:diradmin ${PLUGINPATH}/logs
 chmod 644 ${PLUGINPATH}/plugin.conf
 chown diradmin:diradmin ${PLUGINPATH}/plugin.conf
 
-echo "Successfully installed Let's Encrypt plugin for DirectAdmin.";
+chmod 666 ${PLUGINPATH}/admin.conf
+chown diradmin:diradmin ${PLUGINPATH}/admin.conf
+
+echo "Successfully installed Let's Encrypt plugin to DirectAdmin.";
 
 exit 0;

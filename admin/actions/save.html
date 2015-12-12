@@ -1,0 +1,61 @@
+#!/usr/local/bin/php
+<?php
+use DirectAdmin\LetsEncrypt\Lib\Config;
+use DirectAdmin\LetsEncrypt\Lib\Logger;
+
+/* @var array $servers */
+require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+
+$log = new Logger();
+
+$log->short('Successfully saved config');
+
+/**
+ * Check if both keys are defined
+ */
+if (!isset($_POST['server']) || !in_array($_POST['server'], ['live', 'staging', 'custom'])) {
+    $log->error('You didn\'t choose an item to clear.');
+}
+
+if ($_POST['server'] === 'custom' && (!isset($_POST['custom_server']) || empty($_POST['custom_server']))) {
+    $log->error('You didn\'t define a custom server.');
+}
+
+/**
+ * Save both
+ */
+$config = new Config();
+
+switch($_POST['server']) {
+    case 'live':
+        $config->config('server', $servers['live']);
+
+        $log->info('Successfully set server to live');
+        break;
+
+    case 'staging':
+        $config->config('server', $servers['staging']);
+
+        $log->info('Successfully set server to staging');
+        break;
+
+    case 'custom':
+        if (array_pop(explode('/', $_POST['custom_server'])) !== 'directory') {
+            $log->error('You must include the directory in the custom server');
+
+            break;
+        }
+
+        $config->config('server', $_POST['custom_server']);
+
+        $log->info('Successfully set server to ' . $_POST['custom_server']);
+        break;
+
+    default:
+        $log->error('Can\'t find your choose in the list.');
+        break;
+}
+
+
+$log->output();
+

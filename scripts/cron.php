@@ -1,6 +1,7 @@
 <?php
 use DirectAdmin\LetsEncrypt\Lib\Account;
 use DirectAdmin\LetsEncrypt\Lib\Challenges;
+use DirectAdmin\LetsEncrypt\Lib\Config;
 use DirectAdmin\LetsEncrypt\Lib\Domain;
 use DirectAdmin\LetsEncrypt\Lib\Logger;
 
@@ -9,6 +10,7 @@ define('CRON', true);
 require_once dirname(__DIR__) . '/includes/bootstrap.php';
 
 $log = new Logger();
+$config = new Config();
 
 $usersPath = '/usr/local/directadmin/data/users/';
 
@@ -23,7 +25,7 @@ foreach ($users as $user) {
     }
 
     // Create account object
-    $account = new Account($user, null, 'https://acme-staging.api.letsencrypt.org/directory');
+    $account = new Account($user, null, $config->config('server'));
 
     // Is there a config file present?
     if (!$account->existsInStorage('config.json')) {
