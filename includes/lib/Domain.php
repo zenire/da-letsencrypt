@@ -98,9 +98,11 @@ class Domain {
         $domains = (array) $this->getDomain();
 
         if ($subdomains == null) {
-            $domains += $this->getSubdomains();
-        } else {
-            $domains += $subdomains;
+            $subdomains = $this->getSubdomains();
+        }
+
+        foreach ($subdomains as $subdomain) {
+            $domains[] = $subdomain;
         }
 
         $location = $this->account->acme->requestCertificate($domainKeys, $domains);

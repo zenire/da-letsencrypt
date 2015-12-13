@@ -17,7 +17,7 @@ fi
 echo "30 1 * * * root /usr/local/bin/php /usr/local/directadmin/plugins/da-letsencrypt/scripts/cron.php" > /etc/cron.d/letsencrypt
 
 # Plugin
-chmod -R 755 ${PLUGINPATH}/admin
+chmod -R 755 ${PLUGINPATH}
 chown -R diradmin:diradmin ${PLUGINPATH}
 
 chmod -R 777 ${PLUGINPATH}/logs

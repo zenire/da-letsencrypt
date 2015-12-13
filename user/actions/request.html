@@ -87,7 +87,7 @@ try {
     $domain->applyCertificates();
 
     $domain->config('domain', $domain->getDomain());
-    $domain->config('subdomains', $domain->getSubdomains());
+    $domain->config('subdomains', $_POST['subdomains']);
 
     $domain->config('status', 'applied to DirectAdmin');
     $domain->config('expire', date('Y-m-d', strtotime('+50 days')));
