@@ -25,9 +25,10 @@ class BaseChallenge {
      *
      * @param \stdClass $challenge Challenge properties from ACME
      * @param string $location Location
-     * @param Domain $domain Domain which we need to challenge
+     * @param Domain $domain Main Domain object
+     * @param string $challengeDomain Domain or subdomain to be challenged
      */
-    function __construct($challenge, $location, $domain) {
+    function __construct($challenge, $location, $domain, $challengeDomain) {
         $this->type = $challenge->type;
         $this->status = $challenge->status;
         $this->uri = $challenge->uri;
@@ -36,6 +37,7 @@ class BaseChallenge {
         $this->location = $location;
 
         $this->domain = $domain;
+        $this->challengeDomain = $challengeDomain;
     }
 
     public function solve() {

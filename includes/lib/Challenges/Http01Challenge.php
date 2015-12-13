@@ -17,7 +17,26 @@ class Http01Challenge extends BaseChallenge {
     public function solve() {
         $payload = $this->domain->account->acme->generateHttp01Payload($this->token);
 
-        $challengePath = $this->domain->getPath() . DIRECTORY_SEPARATOR . 'public_html' . DIRECTORY_SEPARATOR . '.well-known';
+        $wwwCheck = explode('.', $this->challengeDomain, 2);
+
+        if ($wwwCheck[0] === 'www') {
+            // WWW, so use the path to without www
+            $domainPath = $this->challengeDomain[1];
+        } else {
+            // without WWW, so use the normal domain
+            $domainPath = $this->challengeDomain;
+        }
+
+        $subdomainCheck = explode('.', $domainPath, 2);
+
+        if ($subdomainCheck[1] === $this->domain->getDomain()) {
+            // The second key is the same as the domain, so we're on a subdomain
+
+            $challengePath = $this->domain->getPath() . DIRECTORY_SEPARATOR . 'public_html' . DIRECTORY_SEPARATOR . $subdomainCheck[0] . DIRECTORY_SEPARATOR . '.well-known';
+        } else {
+            // Were not on a subdomain, use main domain
+            $challengePath = $this->domain->getPath() . DIRECTORY_SEPARATOR . 'public_html' . DIRECTORY_SEPARATOR . '.well-known';
+        }
 
         if (!file_exists($challengePath)) {
             mkdir($challengePath);
@@ -46,7 +65,7 @@ class Http01Challenge extends BaseChallenge {
             chgrp($challengePath . DIRECTORY_SEPARATOR . $this->token, $this->domain->account->getUsername());
         }
 
-        $this->domain->account->acme->selfVerify($this->domain->getDomain(), $this->token, $payload);
+        $this->domain->account->acme->selfVerify($this->challengeDomain, $this->token, $payload);
 
         $this->domain->account->acme->answerChallenge($this->uri, $payload);
         $this->domain->account->acme->pollForChallenge($this->location);

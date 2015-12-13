@@ -56,7 +56,7 @@ try {
 $log->setErrorShort('Error while completing domain challenges');
 
 try {
-    $challenges = new Challenges($domain);
+    $challenges = new Challenges($domain, (array) $_POST['subdomains']);
     $challenges->solveChallenge();
 } catch(\Exception $e) {
     $log->error($e->getMessage());

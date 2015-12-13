@@ -7,15 +7,16 @@ use DirectAdmin\LetsEncrypt\Lib\Challenges\BaseChallenge;
 class Challenges {
 
     private $domain;
+    private $subdomains;
 
-    private $status;
-    private $expires;
+    private $status = [];
+    private $expires = [];
 
-    /** @var BaseChallenge[] */
+    /** @var array[BaseChallenge[]] */
     private $challenges = [];
-    /** @var BaseChallenge[] */
+    /** @var array[BaseChallenge[]] */
     private $solvableChallenges = [];
-    private $location;
+    private $location = [];
     private $combinations = [];
 
     /**
@@ -23,8 +24,9 @@ class Challenges {
      *
      * @param Domain $domain
      */
-    function __construct($domain) {
+    function __construct($domain, $subdomains) {
         $this->domain = $domain;
+        $this->subdomains = $subdomains;
     }
 
     /**
@@ -33,20 +35,24 @@ class Challenges {
      * @return string Challenges
      */
     public function receiveChallenges() {
-        list($this->location, $response) = $this->domain->account->acme->requestChallenges($this->domain->getDomain());
+        $domains = array_merge((array) $this->domain->getDomain(), $this->subdomains);
 
-        $this->combinations = $response->combinations;
-        $this->status = $response->status;
-        $this->expires = $response->expires;
+        foreach ($domains as $domain) {
+            list($this->location[$domain], $response) = $this->domain->account->acme->requestChallenges($domain);
 
-        foreach ($response->challenges as $challenge) {
-            $challengeClassName = '\\DirectAdmin\\LetsEncrypt\\Lib\\Challenges\\';
-            $challengeClassName .= ucfirst(strtolower(preg_replace("/[^A-Za-z0-9 ]/", '', $challenge->type))) . 'Challenge';
+            $this->combinations[$domain] = $response->combinations;
+            $this->status[$domain] = $response->status;
+            $this->expires[$domain] = $response->expires;
 
-            if (class_exists($challengeClassName)) {
-                $this->challenges[] = new $challengeClassName($challenge, $this->location, $this->domain);
-            } else {
-                $this->challenges[] = new BaseChallenge($challenge, $this->location, $this->domain);
+            foreach ($response->challenges as $challenge) {
+                $challengeClassName = '\\DirectAdmin\\LetsEncrypt\\Lib\\Challenges\\';
+                $challengeClassName .= ucfirst(strtolower(preg_replace("/[^A-Za-z0-9 ]/", '', $challenge->type))) . 'Challenge';
+
+                if (class_exists($challengeClassName)) {
+                    $this->challenges[$domain][] = new $challengeClassName($challenge, $this->location[$domain], $this->domain, $domain);
+                } else {
+                    $this->challenges[$domain][] = new BaseChallenge($challenge, $this->location[$domain], $this->domain, $domain);
+                }
             }
         }
 
@@ -64,22 +70,26 @@ class Challenges {
             $this->receiveChallenges();
         }
 
-        $this->solvableChallenges = [];
+        $domains = array_merge((array) $this->domain->getDomain(), $this->subdomains);
 
-        foreach ($this->challenges as $i => $challenge) {
-            if ($challenge->solvable()) {
-                $this->solvableChallenges[] = $i;
+        foreach ($domains as $domain) {
+            $this->solvableChallenges[$domain] = [];
+
+            foreach ($this->challenges[$domain] as $i => $challenge) {
+                if ($challenge->solvable()) {
+                    $this->solvableChallenges[$domain][] = $i;
+                }
             }
-        }
 
-        foreach ($this->solvableChallenges as $i => $challenge) {
-            if (!in_array([$challenge], $this->combinations)) {
-                unset($this->solvableChallenges[$i]);
+            foreach ($this->solvableChallenges[$domain] as $i => $challenge) {
+                if (!in_array([$challenge], $this->combinations[$domain])) {
+                    unset($this->solvableChallenges[$domain][$i]);
+                }
             }
-        }
 
-        if (empty($this->solvableChallenges)) {
-            throw new \Exception('We didn\'t receive any challenge we can solve.');
+            if (empty($this->solvableChallenges[$domain])) {
+                throw new \Exception('We didn\'t receive any challenge we can solve for ' . $domain);
+            }
         }
 
         return $this->solvableChallenges;
@@ -88,24 +98,23 @@ class Challenges {
     /**
      * Solve a challenge
      *
-     * @param int|null $which Which challenge do we need to solve?
      * @throws \Exception
      */
-    public function solveChallenge($which = null) {
-        if ($which == null) {
-            if (empty($this->solvableChallenges)) {
-                $this->solvableChallenges();
-            }
-
-            $challenge = $this->challenges[reset($this->solvableChallenges)];
-        } else {
-            $challenge = $this->challenges[$which];
+    public function solveChallenge() {
+        if (empty($this->solvableChallenges)) {
+            $this->solvableChallenges();
         }
 
-        if ($challenge->solvable()) {
-            $challenge->solve();
-        } else {
-            throw new \Exception('Defined unsolvable challenge');
+        $domains = array_merge((array) $this->domain->getDomain(), $this->subdomains);
+
+        foreach ($domains as $domain) {
+            $challenge = $this->challenges[$domain][reset($this->solvableChallenges[$domain])];
+
+            if ($challenge->solvable()) {
+                $challenge->solve();
+            } else {
+                throw new \Exception('Defined unsolvable challenge for ' . $domain);
+            }
         }
     }
 
