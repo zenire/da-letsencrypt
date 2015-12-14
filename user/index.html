@@ -44,7 +44,7 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
             <td class=list><?= $domain->config('domain'); ?></td>
         </tr>
 
-        <? if (!empty($domain->getSubdomains())): ?>
+        <? if (!empty($domain->config('subdomains'))): ?>
             <tr>
                 <td class="list">Subdomains</td>
                 <td class=list><?= implode(', ', $domain->config('subdomains')); ?></td>
