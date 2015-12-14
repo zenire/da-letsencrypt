@@ -90,7 +90,7 @@ try {
     $domain->config('subdomains', $_POST['subdomains']);
 
     $domain->config('status', 'applied to DirectAdmin');
-    $domain->config('expire', date('Y-m-d', strtotime('+50 days')));
+    $domain->config('expire', date('Y-m-d', strtotime('+90 days')));
 
     if (!in_array($domain->getDomain(), (array) $account->config('domains'))) {
         $account->config('domains', ((array) $account->config('domains')) + [$domain->getDomain()]);
