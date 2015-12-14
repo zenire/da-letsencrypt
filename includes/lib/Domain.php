@@ -46,12 +46,12 @@ class Domain {
      */
     private function getSocket() {
         if (!$this->socket) {
-            $address = '127.0.0.1';
-            $address = (isset($_SERVER['SSL']) && $_SERVER['SSL'] == "1") ? 'ssl://' . $address : $address;
+            $address = (isset($_SERVER['SSL']) && $_SERVER['SSL'] == "1") ? 'ssl://127.0.0.1' : '127.0.0.1';
+            $username = ($this->account && $this->account->getUsername() != 'admin') ? 'admin|' . $this->account->getUsername() : 'admin';
 
             $this->socket = new HTTPSocket();
             $this->socket->connect($address, 2222);
-            $this->socket->set_login('admin');
+            $this->socket->set_login($username);
         }
 
         return $this->socket;
