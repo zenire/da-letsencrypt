@@ -111,7 +111,12 @@ class Challenges {
             $challenge = $this->challenges[$domain][reset($this->solvableChallenges[$domain])];
 
             if ($challenge->solvable()) {
-                $challenge->solve();
+                try {
+                    $challenge->solve();
+                } catch (\Exception $e) {
+                    throw new \Exception('Exception while solving challenge for ' . $domain
+                        . ': ' .$e->getMessage(), $e->getCode(), $e);
+                }
             } else {
                 throw new \Exception('Defined unsolvable challenge for ' . $domain);
             }
