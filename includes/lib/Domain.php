@@ -46,8 +46,7 @@ class Domain {
      */
     private function getSocket() {
         if (!$this->socket) {
-            $address = '127.0.0.1';
-            $address = (isset($_SERVER['SSL']) && $_SERVER['SSL'] == "1") ? 'ssl://' . $address : $address;
+            $address = (isset($_SERVER['SSL']) && $_SERVER['SSL'] == "1") ? 'ssl://127.0.0.1' : '127.0.0.1';
 
             $this->socket = new HTTPSocket();
             $this->socket->connect($address, 2222);

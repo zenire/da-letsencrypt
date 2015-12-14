@@ -189,7 +189,13 @@ class HTTPSocket {
         }
         else
         {
-            $socket = @fsockopen( $this->remote_host, $this->remote_port, $sock_errno, $sock_errstr, 10 );
+            $context = stream_context_create(array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                )
+            ));
+            $socket = stream_socket_client( $this->remote_host . ':' . $this->remote_port, $sock_errno, $sock_errstr, 10, STREAM_CLIENT_CONNECT, $context );
         }
 
         if ( !$socket || !$OK )
