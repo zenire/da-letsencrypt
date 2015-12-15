@@ -10,9 +10,10 @@ However the plugin is not recommended for production use yet, we want you to off
 `cd /usr/local/directadmin/plugins`  
 `git clone https://github.com/Petertjuh360/da-letsencrypt.git da-letsencrypt`  
 `cd ./da-letsencrypt/`  
-`composer install`  
 `chown diradmin:diradmin -hR ../da-letsencrypt/`  
-`sh ./scripts/install.sh`  
+`sh ./scripts/install.sh` 
+`composer install`
+`chown diradmin:diradmin -hR ../da-letsencrypt/`
 Change `active=no` and `installed=no` to `active=yes` and `installed=yes` in `plugin.conf`.  
 
 ### Update
