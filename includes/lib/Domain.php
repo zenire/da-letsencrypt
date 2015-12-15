@@ -256,9 +256,11 @@ class Domain {
 
             $subdomains = ['www.' . $this->getDomain()];
 
-            foreach ($result['list'] as $subdomain) {
-                $subdomains[] = $subdomain . '.' . $this->getDomain();
-                $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
+            if (isset($result['list'])) {
+                foreach ($result['list'] as $subdomain) {
+                    $subdomains[] = $subdomain . '.' . $this->getDomain();
+                    $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
+                }
             }
         }
 
