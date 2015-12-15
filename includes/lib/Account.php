@@ -117,7 +117,11 @@ class Account {
      * @throws \Kelunik\Acme\AcmeException
      */
     public function register() {
-        $this->acme->register($this->email);
+        try {
+            $this->acme->register($this->email);
+        } catch (\Exception $e) {
+            throw new \Exception('Error registering ' . $this->email . ': '. $e->getMessage(), $e->getCode(), $e);
+        }
 
         $this->config('status', 'registered at Let\'s Encrypt');
         $this->config('email', $this->email);
