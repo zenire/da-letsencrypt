@@ -6,7 +6,9 @@ use DirectAdmin\LetsEncrypt\Lib\Challenges\BaseChallenge;
 
 class Challenges {
 
+    /** @var Domain */
     private $domain;
+    /** @var array  */
     private $subdomains;
 
     private $status = [];
@@ -23,8 +25,9 @@ class Challenges {
      * Class constructor
      *
      * @param Domain $domain
+     * @param array  $subdomains
      */
-    function __construct($domain, $subdomains) {
+    function __construct(Domain $domain, array $subdomains = []) {
         $this->domain = $domain;
         $this->subdomains = $subdomains;
     }
