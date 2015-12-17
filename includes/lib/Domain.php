@@ -102,8 +102,12 @@ class Domain {
             $domains = array_merge($domains, $subdomains);
         }
 
-        $location = $this->account->acme->requestCertificate($domainKeys, $domains);
-        $this->certificates = $this->account->acme->pollForCertificate($location);
+        try {
+            $location = $this->account->acme->requestCertificate($domainKeys, $domains);
+            $this->certificates = $this->account->acme->pollForCertificate($location);
+        } catch (\Exception $e) {
+            throw new \Exception("Error requesting certificate: ". $e->getMessage(), $e->getCode(), $e);
+        }
 
         return $this->certificates;
     }
