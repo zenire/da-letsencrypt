@@ -132,7 +132,7 @@ if (!file_exists($path)) {
 }
 
 $lines = [];
-$lines[] = 'from=da-letsencrupt';
+$lines[] = 'from=da-letsencrypt';
 $lines[] = 'name=Message System';
 $lines[] = 'priority=30';
 $lines[] = 'status=open';
