@@ -4,9 +4,6 @@ global $_POST, $_GET;
 
 use DirectAdmin\LetsEncrypt\Lib\Logger;
 
-ini_set('log_errors', 1);
-ini_set('error_log', dirname(__DIR__) . '/logs/php-error.log');
-
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $servers = [
