@@ -1,6 +1,7 @@
 {
   "require": {
-    "wouter0100/acme": "dev-master"
+    "kelunik/acme": "dev-master",
+    "php": ">=5.5.0"
   },
   "minimum-stability": "dev",
   "autoload": {

@@ -118,7 +118,7 @@ class Account {
      */
     public function register() {
         try {
-            $this->acme->register($this->email);
+            \amp\wait($this->acme->register($this->email));
         } catch (\Exception $e) {
             throw new \Exception('Error registering ' . $this->email . ': '. $e->getMessage(), $e->getCode(), $e);
         }

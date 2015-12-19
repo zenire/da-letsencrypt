@@ -15,7 +15,7 @@ class Http01Challenge extends BaseChallenge {
      * @return bool
      */
     public function solve() {
-        $payload = $this->domain->account->acme->generateHttp01Payload($this->token);
+        $payload = \amp\wait($this->domain->account->acme->generateHttp01Payload($this->token));
 
         $wwwCheck = explode('.', $this->challengeDomain, 2);
 
@@ -65,10 +65,10 @@ class Http01Challenge extends BaseChallenge {
             chgrp($challengePath . DIRECTORY_SEPARATOR . $this->token, $this->domain->account->getUsername());
         }
 
-        $this->domain->account->acme->selfVerify($this->challengeDomain, $this->token, $payload);
+        \amp\wait($this->domain->account->acme->selfVerify($this->challengeDomain, $this->token, $payload));
 
-        $this->domain->account->acme->answerChallenge($this->uri, $payload);
-        $this->domain->account->acme->pollForChallenge($this->location);
+        \amp\wait($this->domain->account->acme->answerChallenge($this->uri, $payload));
+        \amp\wait($this->domain->account->acme->pollForChallenge($this->location));
 
         unlink($challengePath . DIRECTORY_SEPARATOR . $this->token);
 

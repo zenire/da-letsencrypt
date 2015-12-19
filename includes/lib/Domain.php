@@ -103,8 +103,8 @@ class Domain {
         }
 
         try {
-            $location = $this->account->acme->requestCertificate($domainKeys, $domains);
-            $this->certificates = $this->account->acme->pollForCertificate($location);
+            $location = \amp\wait($this->account->acme->requestCertificate($domainKeys, $domains));
+            $this->certificates = \amp\wait($this->account->acme->pollForCertificate($location));
         } catch (\Exception $e) {
             throw new \Exception("Error requesting certificate: ". $e->getMessage(), $e->getCode(), $e);
         }

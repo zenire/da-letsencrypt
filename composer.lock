@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3230e4ca090600db3155f6353e5b1a5f",
-    "content-hash": "79ef2f96b1228c57c6fc1a76f562c0c9",
+    "hash": "e17aa46e40af41cf9b3d78d920bf2ee9",
+    "content-hash": "5713ff6911d84264445d37afcafb2923",
     "packages": [
         {
             "name": "amphp/amp",
@@ -386,6 +386,44 @@
             "time": "2015-04-02 15:42:15"
         },
         {
+            "name": "kelunik/acme",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kelunik/acme.git",
+                "reference": "19593a97d30de5a23c3712c3f0edb2ac76a02b0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kelunik/acme/zipball/19593a97d30de5a23c3712c3f0edb2ac76a02b0b",
+                "reference": "19593a97d30de5a23c3712c3f0edb2ac76a02b0b",
+                "shasum": ""
+            },
+            "require": {
+                "amphp/artax": "^2",
+                "namshi/jose": "^6",
+                "sabre/uri": "^1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kelunik\\Acme\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Niklas Keller",
+                    "email": "me@kelunik.com"
+                }
+            ],
+            "description": "ACME library written in PHP.",
+            "time": "2015-12-15 17:35:06"
+        },
+        {
             "name": "namshi/jose",
             "version": "6.0.3",
             "source": {
@@ -585,58 +623,18 @@
                 "url"
             ],
             "time": "2015-04-29 03:47:26"
-        },
-        {
-            "name": "wouter0100/acme",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Wouter0100/acme.git",
-                "reference": "d356693e6719d5a44c9d0b4ba0521ad84869f55b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Wouter0100/acme/zipball/d356693e6719d5a44c9d0b4ba0521ad84869f55b",
-                "reference": "d356693e6719d5a44c9d0b4ba0521ad84869f55b",
-                "shasum": ""
-            },
-            "require": {
-                "amphp/artax": "^2",
-                "namshi/jose": "^6",
-                "sabre/uri": "^1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Kelunik\\Acme\\": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Niklas Keller",
-                    "email": "me@kelunik.com"
-                },
-                {
-                    "name": "Wouter van Os",
-                    "email": "wouter@wouter0100.nl"
-                }
-            ],
-            "description": "ACME library written in PHP.",
-            "time": "2015-12-09 12:24:26"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "wouter0100/acme": 20
+        "kelunik/acme": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.5.0"
+    },
     "platform-dev": []
 }

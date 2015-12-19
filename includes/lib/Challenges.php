@@ -41,7 +41,7 @@ class Challenges {
         $domains = array_merge((array) $this->domain->getDomain(), $this->subdomains);
 
         foreach ($domains as $domain) {
-            list($this->location[$domain], $response) = $this->domain->account->acme->requestChallenges($domain);
+            list($this->location[$domain], $response) = \amp\wait($this->domain->account->acme->requestChallenges($domain));
 
             $this->combinations[$domain] = $response->combinations;
             $this->status[$domain] = $response->status;
