@@ -391,12 +391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kelunik/acme.git",
-                "reference": "19593a97d30de5a23c3712c3f0edb2ac76a02b0b"
+                "reference": "4f4109afcd27085afe8a73fadcd05fc6a96e8fdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kelunik/acme/zipball/19593a97d30de5a23c3712c3f0edb2ac76a02b0b",
-                "reference": "19593a97d30de5a23c3712c3f0edb2ac76a02b0b",
+                "url": "https://api.github.com/repos/kelunik/acme/zipball/4f4109afcd27085afe8a73fadcd05fc6a96e8fdf",
+                "reference": "4f4109afcd27085afe8a73fadcd05fc6a96e8fdf",
                 "shasum": ""
             },
             "require": {
@@ -421,7 +421,7 @@
                 }
             ],
             "description": "ACME library written in PHP.",
-            "time": "2015-12-15 17:35:06"
+            "time": "2015-12-20 15:30:15"
         },
         {
             "name": "namshi/jose",

@@ -15,7 +15,7 @@ class Http01Challenge extends BaseChallenge {
      * @return bool
      */
     public function solve() {
-        $payload = \amp\wait($this->domain->account->acme->generateHttp01Payload($this->token));
+        $payload = $this->domain->account->acme->generateHttp01Payload($this->token);
 
         $wwwCheck = explode('.', $this->challengeDomain, 2);
 
