@@ -38,12 +38,14 @@ try {
     }
 
     $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
+    $subdomains = [];
 
     if (isset($_POST['subdomains']) && is_array($_POST['subdomains']) && !empty($_POST['subdomains'])) {
         foreach ($_POST['subdomains'] as $subdomain) {
             if (!in_array($subdomain, $domain->getSubdomains())) {
                 throw new Exception('One of the selected subdomains isn\'t known in DirectAdmin');
             }
+            $subdomains[] = $subdomain;
         }
     }
 } catch (\Exception $e) {
@@ -56,7 +58,7 @@ try {
 $log->setErrorShort('Error while completing domain challenges');
 
 try {
-    $challenges = new Challenges($domain, (array) $_POST['subdomains']);
+    $challenges = new Challenges($domain, $subdomains);
     $challenges->solveChallenge();
 } catch(\Exception $e) {
     $log->error($e->getMessage());
@@ -71,7 +73,7 @@ $log->setErrorShort('Error while requesting SSL certificates');
 
 try {
     $domain->createKeys();
-    $domain->requestCertificate(null, (array) $_POST['subdomains']);
+    $domain->requestCertificate(null, $subdomains);
 } catch(\Exception $e) {
     $log->error($e->getMessage());
 }
@@ -87,7 +89,7 @@ try {
     $domain->applyCertificates();
 
     $domain->config('domain', $domain->getDomain());
-    $domain->config('subdomains', $_POST['subdomains']);
+    $domain->config('subdomains', $subdomains);
 
     $domain->config('status', 'applied to DirectAdmin');
     $domain->config('expire', date('Y-m-d', strtotime('+90 days')));
