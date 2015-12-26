@@ -12,11 +12,11 @@ However the plugin is not recommended for production use yet, we want you to off
 `cd ./da-letsencrypt/`  
 `chown diradmin:diradmin -hR ../da-letsencrypt/`  
 `sh ./scripts/install.sh`  
-`composer install`  
+`php composer.phar install`  
 `chown diradmin:diradmin -hR ../da-letsencrypt/` 
 Change `active=no` and `installed=no` to `active=yes` and `installed=yes` in `plugin.conf`.  
 
 ### Update
 `cd /usr/local/directadmin/plugins/da-letsencrypt`  
 `git pull`  
-`composer update`  
+`php composer.phar update`  
