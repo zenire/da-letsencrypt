@@ -29,7 +29,7 @@ foreach ($users as $user) {
 
     // Is there a config file present?
     if (!$account->existsInStorage('config.json')) {
-        $log->log('Skipped user ' . $account->getUsername());
+$challenges = new Challenges($domain)        $log->log('Skipped user ' . $account->getUsername());
 
         continue;
     }
@@ -72,7 +72,7 @@ foreach ($users as $user) {
         }
 
         try {
-            $challenges = new Challenges($domain);
+            $challenges = new Challenges($domain, $domain->config('subdomains'));
             $challenges->solveChallenge();
 
             $log->log('Successfully completed challenge for ' . $domain->getDomain());
