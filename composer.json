@@ -1,6 +1,6 @@
 {
   "require": {
-    "kelunik/acme": "dev-master",
+    "kelunik/acme": "^0.2.1",
     "php": ">=5.5.0"
   },
   "minimum-stability": "dev",
