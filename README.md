@@ -4,7 +4,7 @@ Welcome to this repository of an unofficial Let's Encrypt plugin for DirectAdmin
 ## This plugin is in active development. We would like you to help us with the plugin! Create issues, help with the code or improve the wiki. Thank you for helping!
 
 ## Get started
-However the plugin is not recommended for production use yet, we want you to offer the possibility to use this plugin. Run the following commands via your terminal or SSH. **You must have Git AND Composer installed for this way to get started!**
+However the plugin is not recommended for production use yet, we want you to offer the possibility to use this plugin. Run the following commands via your terminal or SSH. **You must have Git AND Composer installed and working for this way to get started!**
 
 ### Install
 `cd /usr/local/directadmin/plugins`  
