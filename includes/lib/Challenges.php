@@ -118,7 +118,7 @@ class Challenges {
                     $challenge->solve();
                 } catch (\Exception $e) {
                     throw new \Exception('Exception while solving challenge for ' . $domain
-                        . ': ' .$e->getMessage(), $e->getCode(), $e);
+                        . ': ' .$e->getMessage(), 0, $e);
                 }
             } else {
                 throw new \Exception('Defined unsolvable challenge for ' . $domain);

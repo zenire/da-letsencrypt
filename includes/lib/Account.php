@@ -120,7 +120,7 @@ class Account {
         try {
             \amp\wait($this->acme->register($this->email));
         } catch (\Exception $e) {
-            throw new \Exception('Error registering ' . $this->email . ': '. $e->getMessage(), $e->getCode(), $e);
+            throw new \Exception('Error registering ' . $this->email . ': '. $e->getMessage(), 0, $e);
         }
 
         $this->config('status', 'registered at Let\'s Encrypt');
