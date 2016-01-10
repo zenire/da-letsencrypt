@@ -99,10 +99,8 @@ foreach ($users as $user) {
     }
 }
 
-// Rewrite and restart HTTPD files
+// Rewrite HTTPD files
 $queue = 'action=rewrite&value=httpd' . PHP_EOL;
-$queue .= 'action=httpd&value=graceful' . PHP_EOL;
-
 file_put_contents('/usr/local/directadmin/data/task.queue', $queue, FILE_APPEND);
 
 $log->log('Added rewrite and reload to Task.queue');
