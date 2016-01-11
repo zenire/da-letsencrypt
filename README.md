@@ -7,6 +7,10 @@ Welcome to this repository of an unofficial Let's Encrypt plugin for DirectAdmin
 However the plugin is not recommended for production use yet, we want you to offer the possibility to use this plugin. Run the following commands via your terminal or SSH. **You must have Git AND Composer installed and working for this way to get started!**
 
 ### Install
+#### Install Composer
+Skip this step if you already have Composer installed.
+`curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer`
+#### Install Plugin
 `cd /usr/local/directadmin/plugins`  
 `git clone https://github.com/Petertjuh360/da-letsencrypt.git da-letsencrypt`  
 `cd ./da-letsencrypt/`  
