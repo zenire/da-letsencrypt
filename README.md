@@ -8,7 +8,7 @@ However the plugin is not recommended for production use yet, we want you to off
 
 ### Install
 #### Install Composer
-Skip this step if you already have Composer installed.
+Skip this step if you already have Composer installed.  
 `curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer`
 #### Install Plugin
 `cd /usr/local/directadmin/plugins`  
