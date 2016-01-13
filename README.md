@@ -9,18 +9,24 @@ However the plugin is not recommended for production use yet, we want you to off
 ### Install
 #### Install Composer
 Skip this step if you already have Composer installed.  
-`curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer`
+```
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+```
 #### Install Plugin
-`cd /usr/local/directadmin/plugins`  
-`git clone https://github.com/Petertjuh360/da-letsencrypt.git da-letsencrypt`  
-`cd ./da-letsencrypt/`  
-`chown diradmin:diradmin -hR ../da-letsencrypt/`  
-`sh ./scripts/install.sh`  
-`composer install`  
-`chown diradmin:diradmin -hR ../da-letsencrypt/` 
+```
+cd /usr/local/directadmin/plugins
+git clone https://github.com/Petertjuh360/da-letsencrypt.git da-letsencrypt
+cd ./da-letsencrypt/
+chown diradmin:diradmin -hR ../da-letsencrypt/
+sh ./scripts/install.sh
+composer install
+chown diradmin:diradmin -hR ../da-letsencrypt/
+```
 Change `active=no` and `installed=no` to `active=yes` and `installed=yes` in `plugin.conf`.  
 
 ### Update
-`cd /usr/local/directadmin/plugins/da-letsencrypt`  
-`git pull`  
-`composer update`  
+```
+cd /usr/local/directadmin/plugins/da-letsencrypt
+git pull
+composer update
+```
