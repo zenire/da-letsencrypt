@@ -65,7 +65,7 @@ class Domain {
     public function createKeys() {
         $rsa = new RSA();
 
-        $keys = $rsa->createKey(4096);
+        $keys = $rsa->createKey(2048);
 
         if ($keys['partialkey'] === false) {
             $this->domainKeys = new KeyPair($keys['privatekey'], $keys['publickey']);
