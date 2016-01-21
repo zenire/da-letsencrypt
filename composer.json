@@ -1,7 +1,8 @@
 {
   "require": {
     "kelunik/acme": "^0.2.1",
-    "php": ">=5.5.0"
+    "php": ">=5.5.0",
+    "phpseclib/phpseclib": "2.*"
   },
   "minimum-stability": "dev",
   "autoload": {

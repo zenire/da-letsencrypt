@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e17aa46e40af41cf9b3d78d920bf2ee9",
-    "content-hash": "5713ff6911d84264445d37afcafb2923",
+    "hash": "2d7639a6c3971ad640bce5cd7f1d3298",
+    "content-hash": "548b21e7270b2118da1b362e82b5c3b6",
     "packages": [
         {
             "name": "amphp/amp",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "72683085c53e482b294674d9af6e003ffdc4570d"
+                "reference": "5341a4cb92ce9a8e1b44816a391f95dd5b5b2197"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/72683085c53e482b294674d9af6e003ffdc4570d",
-                "reference": "72683085c53e482b294674d9af6e003ffdc4570d",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/5341a4cb92ce9a8e1b44816a391f95dd5b5b2197",
+                "reference": "5341a4cb92ce9a8e1b44816a391f95dd5b5b2197",
                 "shasum": ""
             },
             "require": {
@@ -62,20 +62,20 @@
                 "non-blocking",
                 "promise"
             ],
-            "time": "2015-11-16 13:53:19"
+            "time": "2016-01-09 14:19:56"
         },
         {
             "name": "amphp/artax",
-            "version": "2.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/artax.git",
-                "reference": "f0d174ad0b42a6f619fdccfcb99a3059b90e5acc"
+                "reference": "2c4309934f3821b95512b687bca5d65a90074cc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/artax/zipball/f0d174ad0b42a6f619fdccfcb99a3059b90e5acc",
-                "reference": "f0d174ad0b42a6f619fdccfcb99a3059b90e5acc",
+                "url": "https://api.github.com/repos/amphp/artax/zipball/2c4309934f3821b95512b687bca5d65a90074cc8",
+                "reference": "2c4309934f3821b95512b687bca5d65a90074cc8",
                 "shasum": ""
             },
             "require": {
@@ -90,8 +90,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev",
-                    "dev-v2": "2.0.0-dev"
+                    "dev-master": "2.x-dev",
+                    "dev-1.x": "1.x-dev"
                 }
             },
             "autoload": {
@@ -120,7 +120,7 @@
                 "parallel",
                 "rest"
             ],
-            "time": "2015-11-10 00:53:00"
+            "time": "2016-01-13 17:26:54"
         },
         {
             "name": "amphp/cache",
@@ -172,16 +172,16 @@
         },
         {
             "name": "amphp/dns",
-            "version": "v0.8.4",
+            "version": "v0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/dns.git",
-                "reference": "4c4d450d4af26fc55dc56dcf45ec7977373a38bf"
+                "reference": "2f8103f1738fe48553b80733076c987234d8f49e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/dns/zipball/4c4d450d4af26fc55dc56dcf45ec7977373a38bf",
-                "reference": "4c4d450d4af26fc55dc56dcf45ec7977373a38bf",
+                "url": "https://api.github.com/repos/amphp/dns/zipball/2f8103f1738fe48553b80733076c987234d8f49e",
+                "reference": "2f8103f1738fe48553b80733076c987234d8f49e",
                 "shasum": ""
             },
             "require": {
@@ -236,7 +236,7 @@
                 "dns",
                 "resolve"
             ],
-            "time": "2015-12-08 09:41:38"
+            "time": "2015-12-23 13:56:14"
         },
         {
             "name": "amphp/file",
@@ -391,12 +391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kelunik/acme.git",
-                "reference": "4f4109afcd27085afe8a73fadcd05fc6a96e8fdf"
+                "reference": "f968302bbe7b140e8dbd4b6caa77fed0e5eed018"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kelunik/acme/zipball/4f4109afcd27085afe8a73fadcd05fc6a96e8fdf",
-                "reference": "4f4109afcd27085afe8a73fadcd05fc6a96e8fdf",
+                "url": "https://api.github.com/repos/kelunik/acme/zipball/f968302bbe7b140e8dbd4b6caa77fed0e5eed018",
+                "reference": "f968302bbe7b140e8dbd4b6caa77fed0e5eed018",
                 "shasum": ""
             },
             "require": {
@@ -405,6 +405,11 @@
                 "sabre/uri": "^1"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.2-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Kelunik\\Acme\\": "lib"
@@ -421,20 +426,20 @@
                 }
             ],
             "description": "ACME library written in PHP.",
-            "time": "2015-12-20 15:30:15"
+            "time": "2015-12-29 14:08:19"
         },
         {
             "name": "namshi/jose",
-            "version": "6.0.3",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/namshi/jose.git",
-                "reference": "e214c25ce0deed923ef6b299fbad87a822b51b2c"
+                "reference": "0ae1eae2be4f7e31a649ab9e3b782c3aedf81ebd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/namshi/jose/zipball/e214c25ce0deed923ef6b299fbad87a822b51b2c",
-                "reference": "e214c25ce0deed923ef6b299fbad87a822b51b2c",
+                "url": "https://api.github.com/repos/namshi/jose/zipball/0ae1eae2be4f7e31a649ab9e3b782c3aedf81ebd",
+                "reference": "0ae1eae2be4f7e31a649ab9e3b782c3aedf81ebd",
                 "shasum": ""
             },
             "require": {
@@ -444,12 +449,12 @@
                 "ext-openssl": "*",
                 "ext-pcre": "*",
                 "ext-spl": "*",
-                "php": ">=5.4.8",
-                "phpseclib/phpseclib": "1.0.0"
+                "php": ">=5.5",
+                "phpseclib/phpseclib": "2.0.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.5",
-                "satooshi/php-coveralls": "dev-master"
+                "phpunit/phpunit": "^4.5|^5.0",
+                "satooshi/php-coveralls": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -466,6 +471,10 @@
                 {
                     "name": "Alessandro Nadalin",
                     "email": "alessandro.nadalin@gmail.com"
+                },
+                {
+                    "name": "Alessandro Cinelli (cirpo)",
+                    "email": "alessandro.cinelli@gmail.com"
                 }
             ],
             "description": "JSON Object Signing and Encryption library for PHP.",
@@ -477,24 +486,24 @@
                 "jwt",
                 "token"
             ],
-            "time": "2015-11-13 08:01:01"
+            "time": "2016-01-13 10:17:13"
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "1.0.0",
+            "version": "2.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "844134df95e42b93ed5506a2d11ca5accda99412"
+                "reference": "ba6fb78f727cd09f2a649113b95468019e490585"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/844134df95e42b93ed5506a2d11ca5accda99412",
-                "reference": "844134df95e42b93ed5506a2d11ca5accda99412",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ba6fb78f727cd09f2a649113b95468019e490585",
+                "reference": "ba6fb78f727cd09f2a649113b95468019e490585",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.0.0"
+                "php": ">=5.3.3"
             },
             "require-dev": {
                 "phing/phing": "~2.7",
@@ -504,27 +513,17 @@
             },
             "suggest": {
                 "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
-                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations.",
-                "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 5.0.0."
+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Crypt": "phpseclib/",
-                    "File": "phpseclib/",
-                    "Math": "phpseclib/",
-                    "Net": "phpseclib/",
-                    "System": "phpseclib/"
-                },
-                "files": [
-                    "phpseclib/Crypt/Random.php"
-                ]
+                "psr-4": {
+                    "phpseclib\\": "phpseclib/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "phpseclib/"
-            ],
             "license": [
                 "MIT"
             ],
@@ -547,6 +546,11 @@
                 {
                     "name": "Hans-Jürgen Petrich",
                     "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com",
                     "role": "Developer"
                 }
             ],
@@ -571,7 +575,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-08-04 02:22:12"
+            "time": "2016-01-18 17:07:21"
         },
         {
             "name": "sabre/uri",
@@ -628,9 +632,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "kelunik/acme": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

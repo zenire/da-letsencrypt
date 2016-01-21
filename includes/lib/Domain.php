@@ -2,7 +2,7 @@
 
 namespace DirectAdmin\LetsEncrypt\Lib;
 
-use Crypt_RSA;
+use phpseclib\Crypt\RSA;
 use DirectAdmin\LetsEncrypt\Lib\Utility\ConfigurableTrait;
 use DirectAdmin\LetsEncrypt\Lib\Utility\StorageTrait;
 use Kelunik\Acme\KeyPair;
@@ -63,7 +63,7 @@ class Domain {
      * @throws \Exception
      */
     public function createKeys() {
-        $rsa = new Crypt_RSA();
+        $rsa = new RSA();
 
         $keys = $rsa->createKey(4096);
 
