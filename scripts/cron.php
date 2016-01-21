@@ -99,51 +99,14 @@ foreach ($users as $user) {
     }
 }
 
-// Rewrite HTTPD files
-$queue = 'action=rewrite&value=httpd' . PHP_EOL;
+$tasks = [];
 
-file_put_contents('/usr/local/directadmin/data/task.queue', $queue, FILE_APPEND);
+// Rewrite HTTPD files
+$tasks[] = 'action=rewrite&value=httpd';
 
 $log->log('Added rewrite and reload to Task.queue');
 
 // Send notification to admin
-$latestId = array_pop(scandir('/usr/local/directadmin/data/tickets'));
-$id = array_pop(scandir('/usr/local/directadmin/data/tickets/' . $latestId)) + 1;
-
-$path = '/usr/local/directadmin/data/tickets/' . substr(sprintf("%09d", $id), 0, 6);
-
-if (!file_exists($path)) {
-    mkdir($path);
-
-    chmod($path, 0700);
-    chown($path, 'diradmin');
-    chgrp($path, 'diradmin');
-}
-
-$path = $path . '/' . $id;
-
-if (!file_exists($path)) {
-    mkdir($path);
-
-    chmod($path, 0700);
-    chown($path, 'diradmin');
-    chgrp($path, 'diradmin');
-}
-
-$lines = [];
-$lines[] = 'from=da-letsencrypt';
-$lines[] = 'name=Message System';
-$lines[] = 'priority=30';
-$lines[] = 'status=open';
-$lines[] = 'subject=Lets Encrypt reissue cron ran';
-$lines[] = 'type=message';
-$lines[] = 'user=multiple';
-
-file_put_contents($path . '/000.conf', implode("\n", $lines));
-chmod($path . '/000.conf', 0600);
-chown($path . '/000.conf', 'diradmin');
-chgrp($path . '/000.conf', 'diradmin');
-
 $lines = [];
 $lines[] = 'First of all, thanks for using our plugin! Now, let\'s get to straight business, the reissue cron has just ran!';
 $lines[] = '';
@@ -152,9 +115,6 @@ foreach ($log->getLog() as $line) {
     $lines[] = $line;
 }
 
-file_put_contents($path . '/000.msg', implode("\n", $lines));
-chmod($path . '/000.msg', 0600);
-chown($path . '/000.msg', 'diradmin');
-chgrp($path . '/000.msg', 'diradmin');
+$tasks[] = 'action=notify&value=admin&subject=Lets Encrypt reissue cron ran&from=da-letsencrypt&message=' . urlencode(implode(PHP_EOL, $lines));
 
-file_put_contents('/usr/local/directadmin/data/admin/tickets.list', sprintf("%09d", $id) .'=new=yes&type=message' . PHP_EOL, FILE_APPEND);
+file_put_contents('/usr/local/directadmin/data/task.queue', implode(PHP_EOL, $tasks) . PHP_EOL, FILE_APPEND);
