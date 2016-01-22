@@ -22,12 +22,14 @@ if (!isset($result['letsencrypt'])): ?>
         <form action="/CMD_PLUGINS_ADMIN/da-letsencrypt/actions/install.html" method="POST">
             <tr>
                 <td class="list">
-                    <p>Our cronjob requires a login key to be created for the admin user. This login key is created
-                        automatically when you click "Install".</p>
+                    <p>Our cronjob requires a login key to be created for the admin user. This login key is created automatically when you click "Install".</p>
 
                     <p>The login key contains the following settings:</p>
 
                     <ul>
+                        <li>/CMD_API_SSL</li>
+                        <li>/CMD_API_SUBDOMAIN</li>
+                        <li>/CMD_API_LOGIN_KEYS</li>
                         <li>Unlimited uses, never expires.</li>
                         <li>Accessible through 127.0.0.1 and ::1 (localhost).</li>
                     </ul>
