@@ -21,7 +21,7 @@ class Config {
      */
     function __construct($path = null) {
         if ($path == null) {
-            $this->path = '/usr/local/directadmin/plugins/da-letsencrypt/admin.conf';
+            $this->path = '/usr/local/directadmin/plugins/da-letsencrypt/config.conf';
         } else {
             $this->path = $path;
         }

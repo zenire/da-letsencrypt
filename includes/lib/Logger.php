@@ -115,9 +115,9 @@ class Logger {
                     <p align="center">
                         <?= implode('<br />', $this->lines); ?>
                     </p>
-                    <? if ($back): ?>
+                    <?php if ($back): ?>
                         <p align="center"><a href="<?= $back; ?>">Back</a></p>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </td>
             </tr>
             </tbody>
