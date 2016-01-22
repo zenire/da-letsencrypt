@@ -1,14 +1,13 @@
 #!/bin/sh
-#
-# Created by Peter Bin
 
+# GO to pluginpath
 PLUGINPATH=/usr/local/directadmin/plugins/da-letsencrypt
 cd ${PLUGINPATH}
 
 # Install cronjob
 echo "30 1 * * * root /usr/local/bin/php /usr/local/directadmin/plugins/da-letsencrypt/scripts/cron.php" > /etc/cron.d/letsencrypt
 
-# Plugin
+# Set the correct permissions
 chmod -R 755 ${PLUGINPATH}
 chown -R diradmin:diradmin ${PLUGINPATH}
 
@@ -21,6 +20,6 @@ chown diradmin:diradmin ${PLUGINPATH}/plugin.conf
 chmod 666 ${PLUGINPATH}/config.conf
 chown diradmin:diradmin ${PLUGINPATH}/config.conf
 
-echo "Successfully installed Let's Encrypt plugin to DirectAdmin.";
-
+# Show success
+echo "Successfully installed Let's Encrypt plugin to DirectAdmin, please go to the Let's Encrypt page in DirectAdmin to finish the configuration.";
 exit 0;
