@@ -11,85 +11,85 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
 
 <table class="list" cellspacing="1" cellpadding="3">
     <tr>
-        <td class=listtitle colspan=2>SSL information</td>
+        <td class="listtitle" colspan="2">SSL information</td>
     </tr>
 
     <tr>
-        <td class="list">Account status</td>
-        <td class=list><?= (($account->config('status') == null) ? 'Not generated yet' : ucfirst($account->config('status'))); ?></td>
+        <td class="list" style="width: 15%;">Account status</td>
+        <td class="list"><?= (($account->config('status') == null) ? 'Not generated yet' : ucfirst($account->config('status'))); ?></td>
     </tr>
 
     <tr>
         <td class="list">Account keys</td>
-        <td class=list><?= ((!$account->existsInStorage('private.key') || !$account->existsInStorage('private.key')) ? 'Not generated yet' : 'Generated (<a href="/CMD_PLUGINS/da-letsencrypt/account_keys.html">view / edit</a>)'); ?></td>
+        <td class="list"><?= ((!$account->existsInStorage('private.key') || !$account->existsInStorage('private.key')) ? 'Not generated yet' : 'Generated (<a href="/CMD_PLUGINS/da-letsencrypt/account_keys.html">view / edit</a>)'); ?></td>
     </tr>
 
-    <? if (!empty($account->config('domains'))): ?>
+    <?php if (!empty($account->config('domains'))): ?>
         <tr>
             <td class="list">Account domains</td>
-            <td class=list><?= implode(', ', $account->config('domains')); ?></td>
+            <td class="list"><?= implode(', ', $account->config('domains')); ?></td>
         </tr>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? if (!empty($account->config('email'))): ?>
+    <?php if (!empty($account->config('email'))): ?>
         <tr>
             <td class="list">Account email</td>
-            <td class=list><?= $account->config('email'); ?></td>
+            <td class="list"><?= $account->config('email'); ?></td>
         </tr>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? if ($domain->existsInStorage('config.json')): ?>
+    <?php if ($domain->existsInStorage('config.json')): ?>
         <tr>
             <td class="list">Domain</td>
-            <td class=list><?= $domain->config('domain'); ?></td>
+            <td class="list"><?= $domain->config('domain'); ?></td>
         </tr>
 
-        <? if (!empty($domain->config('subdomains'))): ?>
+        <?php if (!empty($domain->config('subdomains'))): ?>
             <tr>
                 <td class="list">Subdomains</td>
-                <td class=list><?= implode(', ', $domain->config('subdomains')); ?></td>
+                <td class="list"><?= implode(', ', $domain->config('subdomains')); ?></td>
             </tr>
-        <? endif; ?>
+        <?php endif; ?>
 
         <tr>
             <td class="list">SSL status</td>
-            <td class=list><?= ucfirst($domain->config('status')); ?></td>
+            <td class="list"><?= ucfirst($domain->config('status')); ?></td>
         </tr>
 
         <tr>
             <td class="list">SSL expire date</td>
-            <td class=list><?= $domain->config('expire'); ?> (will automatically be renewed)</td>
+            <td class="list"><?= $domain->config('expire'); ?> (will automatically be renewed)</td>
         </tr>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? if ($account->config('status') != null || $domain->existsInStorage('config.json')): ?>
+    <?php if ($account->config('status') != null || $domain->existsInStorage('config.json')): ?>
         <tr>
             <td class="list">Clear/reset</td>
-            <td class=list>
+            <td class="list">
                 <form action="/CMD_PLUGINS/da-letsencrypt/actions/clear.html" method="POST" style="margin: 0;">
-                    <? if ($account->config('status') != null): ?>
+                    <?php if ($account->config('status') != null): ?>
                         <input type="submit" name="account" value="Account" onclick="return confirm('Are you sure? All domains associated will be removed.');" />
-                    <? endif; ?>
-                    <? if ($domain->existsInStorage('config.json')): ?>
+                    <?php endif; ?>
+                    <?php if ($domain->existsInStorage('config.json')): ?>
                         <input type="submit" name="domain" value="Domain (<?= $domain->getDomain(); ?>)" onclick="return confirm('Are you sure?');" />
-                    <? endif; ?>
+                    <?php endif; ?>
                 </form>
             </td>
         </tr>
-    <? endif; ?>
+    <?php endif; ?>
 
     <tr>
-        <td class=listtitle colspan=2>Request a (new) SSL certificate</td>
+        <td class="listtitle" colspan=2>Request a (new) SSL certificate</td>
     </tr>
 
     <form action="/CMD_PLUGINS/da-letsencrypt/actions/request.html" method="POST">
         <tr>
             <td class="list">Domain</td>
-            <td class=list><?= $domain->getDomain(); ?></td>
+            <td class="list"><?= $domain->getDomain(); ?></td>
         </tr>
         <tr>
             <td class="list">Subdomains</td>
-            <td class=list>
+            <td class="list">
                 <?php
                 foreach($domain->getSubdomains() as $i => $subdomain) {
                     echo '<input type="checkbox" id="subdomain_' . $i . '" name="subdomains[]" value="' . $subdomain . '" checked="checked" /> <label for="subdomain_' . $i . '">' . $subdomain .'</label><br/>';
@@ -99,7 +99,7 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
         </tr>
         <tr>
             <td class="list"><label for="email">E-mail Address</label></td>
-            <td class=list>
+            <td class="list">
                 <input type="text" id="email" name="email" value="<?= $account->config('email'); ?>" /> (e.g. example@domain.com)
             </td>
         </tr>
@@ -113,5 +113,9 @@ $domain = new Domain($_SERVER['SESSION_SELECTED_DOMAIN'], $account);
         </tr>
     </form>
 </table>
+
+<div style="text-align: center; margin-top: 10px;;">
+    Plugin is created by Wouter van Os (Wouter0100), Peter Bin (Petertjuh360) and all it's <a href="https://github.com/Petertjuh360/da-letsencrypt/graphs/contributors">contributors</a>.
+</div>
 
 
