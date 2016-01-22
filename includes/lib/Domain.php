@@ -40,23 +40,6 @@ class Domain {
     }
 
     /**
-     * Get already initialized HTTPSocket, or create a new one
-     *
-     * @return HTTPSocket
-     */
-    private function getSocket() {
-        if (!$this->socket) {
-            $address = (isset($_SERVER['SSL']) && $_SERVER['SSL'] == "1") ? 'ssl://127.0.0.1' : '127.0.0.1';
-
-            $this->socket = new HTTPSocket();
-            $this->socket->connect($address, 2222);
-            $this->socket->set_login('admin');
-        }
-
-        return $this->socket;
-    }
-
-    /**
      * Create domain RSA keys
      *
      * @return KeyPair
@@ -144,7 +127,7 @@ class Domain {
             $config->config('SSLCACertificateFile', $domainPath . '.cacert');
             $config->config('ssl', 'ON');
         } else {
-            $sock = $this->getSocket();
+            $sock = DirectAdmin::get();
             $sock->set_method('POST');
             $sock->query('/CMD_API_SSL', [
                 'domain' => $this->getDomain(),
@@ -184,7 +167,7 @@ class Domain {
      * @throws \Exception
      */
     public function removeCertificates() {
-        $sock = $this->getSocket();
+        $sock = DirectAdmin::get();
         $sock->set_method('POST');
         $sock->query('/CMD_API_SSL', [
             'domain' => $this->getDomain(),
@@ -251,7 +234,7 @@ class Domain {
                 $subdomains[] = 'www.' . $subdomain . '.' . $this->getDomain();
             }
         } else {
-            $sock = $this->getSocket();
+            $sock = DirectAdmin::get();
             $sock->set_method('POST');
             $sock->query('/CMD_API_SUBDOMAIN', [
                 'domain' => $_SERVER['SESSION_SELECTED_DOMAIN']
