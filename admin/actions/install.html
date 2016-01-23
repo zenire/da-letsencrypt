@@ -1,0 +1,38 @@
+#!/usr/local/bin/php -c/usr/local/directadmin/plugins/da-letsencrypt/includes/php.ini
+<?php
+use DirectAdmin\LetsEncrypt\Lib\Config;
+use DirectAdmin\LetsEncrypt\Lib\DirectAdmin;
+use DirectAdmin\LetsEncrypt\Lib\Logger;
+
+/* @var array $servers */
+require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.php';
+
+$log = new Logger();
+
+$log->short('Successfully installed Let\'s Encrypt');
+
+$key = md5(time()) . md5(rand()); //Length of DirectAdmin keys, 32 chars + 32 chars = 64 chars
+
+$socket = DirectAdmin::get();
+$socket->set_method('POST');
+$socket->query('/CMD_API_LOGIN_KEYS', array(
+    'action' => 'create',
+    'keyname' => 'letsencrypt',
+    'key' => $key,
+    'key2' => $key,
+    'never_expires' => 'yes',
+    'max_uses' => '0',
+    'ips' => '127.0.0.1' . PHP_EOL . '::1',
+    'passwd' => $_POST['password'],
+    'select_allow1' => 'CMD_API_SSL',
+    'select_allow2' => 'CMD_API_SUBDOMAIN'
+));
+
+$result = $socket->fetch_parsed_body();
+
+if (isset($result['error']) && $result['error'] == 1) {
+    $log->error($result['details'], $result['text']);
+}
+
+$log->output();
+
