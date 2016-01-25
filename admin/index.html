@@ -1,25 +1,89 @@
 #!/usr/local/bin/php -c/usr/local/directadmin/plugins/da-letsencrypt/includes/php.ini
 <?php
 use DirectAdmin\LetsEncrypt\Lib\Config;
+use DirectAdmin\LetsEncrypt\Lib\DirectAdmin;
 
 /* @var array $servers */
 require_once dirname(__DIR__) . '/includes/bootstrap.php';
 
 $config = new Config();
-?>
+$socket = DirectAdmin::get();
+
+$socket->query('/CMD_API_LOGIN_KEYS');
+
+$result = $socket->fetch_parsed_body();
+
+if (!isset($result['letsencrypt']) || (isset($result['error']) && $result['error'] == 1)): ?>
+    <table class="list" cellspacing="1" cellpadding="3">
+        <tr>
+            <td class=listtitle colspan=2>Cronjob installation</td>
+        </tr>
+
+        <form action="/CMD_PLUGINS_ADMIN/da-letsencrypt/actions/install.html" method="POST">
+            <?php if (isset($result['error']) && $result['error'] == 1): ?>
+                <tr>
+                    <td class="list">
+                        <p>There was an error while checking for a Login Key to exist in DirectAdmin:</p>
+
+                        <pre><?= $result['text']; ?></pre>
+
+                        <p>This error has to be fixed before you can finish the installation of this plugin.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="listtitle" align="right" colspan="6">
+                    </td>
+                </tr>
+            <?php else: ?>
+                <tr>
+                    <td class="list" colspan="2">
+                        <p>Our cronjob requires a login key to be created for the admin user. This login key is created automatically when you click "Install".</p>
+
+                        <p>The login key contains the following settings:</p>
+
+                        <ul>
+                            <li>/CMD_API_SSL</li>
+                            <li>/CMD_API_SUBDOMAIN</li>
+                            <li>Unlimited uses, never expires.</li>
+                            <li>Accessible through 127.0.0.1 and ::1 (localhost).</li>
+                        </ul>
+
+                        <p>The login key is saved on a save place where only the root user of your server can read it (our cron runs as root).</p>
+                        <p>When due updates we need to upgrade the key, we'll send you a notification through DirectAdmin's Message System.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="list" style="width: 15%;">Password</td>
+                    <td class="list">
+                        <input type="password" name="password" size="16">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="listtitle" align="right" colspan="6">
+                        <input type="submit" value="Install">
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </form>
+    </table>
+<?php endif; ?>
+
 <table class="list" cellspacing="1" cellpadding="3">
     <tr>
-        <td class=listtitle colspan=2>SSL information</td>
+        <td class=listtitle colspan=2>Let's Encrypt configuration</td>
     </tr>
 
     <form action="/CMD_PLUGINS_ADMIN/da-letsencrypt/actions/save.html" method="POST">
         <tr>
-            <td class="list">ACME server</td>
-            <td class=list>
+            <td class="list" style="width: 15%;">ACME server</td>
+            <td class="list">
                 <input type="radio" id="server_live" name="server" value="live" <?= (($config->config('server') == $servers['live']) ? 'checked="checked"' : ''); ?>onclick="return confirm('Are you sure you want to change this? All currently saved accounts will being removed.');"/> <label for="server_live">Let's Encrypt Live</label> <br/>
                 <input type="radio" id="server_staging" name="server" value="staging" <?= (($config->config('server') == $servers['staging']) ? 'checked="checked"' : ''); ?> onclick="return confirm('Are you sure you want to change this? All currently saved accounts will being removed.');" /> <label for="server_staging">Let's Encrypt Staging</label> <br/>
 
-                <? $custom = !in_array($config->config('server'), $servers); ?>
+                <?php $custom = !in_array($config->config('server'), $servers); ?>
                 <input type="radio" id="server_custom" name="server" value="custom" <?= (($custom) ? 'checked="checked"' : ''); ?> onclick="return confirm('Are you sure you want to change this? All currently saved accounts will being removed.');" /> <label for="server_custom">Custom:</label> <input type="text" style="width: 50%;" name="custom_server" value="<?= (($custom) ? $config->config('server') : ''); ?>" />
             </td>
         </tr>
