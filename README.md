@@ -2,6 +2,7 @@
 Welcome to this repository of an unofficial Let's Encrypt plugin for DirectAdmin. With this plugin it should become very easy and fast to request and automatically install and renew certificates of Let's Encrypt for your domain managed by DirectAdmin.
 
 ## Development of this plugin is suspended because of native Let's Encrypt support in DirectAdmin since version 1.49.2.
+https://help.directadmin.com/item.php?id=648
 
 ## Get started
 However the plugin is not recommended for production use yet, we want you to offer the possibility to test this plugin. This is for development and testing propose only. If you're testing this plugin and submit an issue, please provide more debug information, so we're able to solve this issue. Run the following commands via your terminal or SSH. **You must have Git AND Composer installed and working for this way to get started!**
